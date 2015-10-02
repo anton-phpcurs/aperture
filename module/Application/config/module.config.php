@@ -22,6 +22,7 @@ return array(
                     ),
                 ),
             ),
+            // Application ------------------------------------------------------------------------------------------------
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
@@ -36,7 +37,7 @@ return array(
                         'action'        => 'index',
                     ),
                 ),
-                'may_terminate' => true,
+/*                'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
                         'type'    => 'Segment',
@@ -49,6 +50,20 @@ return array(
                             'defaults' => array(
                             ),
                         ),
+                    ),
+                ),*/
+            ),
+
+
+            // Accounts ------------------------------------------------------------------------------------------------
+            'accounts' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/accounts',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller'    => 'Accounts',
+                        'action'        => 'index',
                     ),
                 ),
             ),
@@ -75,7 +90,8 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => Controller\IndexController::class
+            'Application\Controller\Index' => Controller\IndexController::class,
+            'Application\Controller\Accounts' => 'Application\Controller\AccountsController'
         ),
     ),
     'view_manager' => array(
