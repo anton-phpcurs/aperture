@@ -12,7 +12,7 @@ use Zend\InputFilter;
 use Zend\Form\Element;
 use Zend\Form\Form;
 
-class EditForm extends Form
+class OtherForm extends Form
 {
     //------------------------------------------------------------------------------------------------------------------
     public function __construct($name = null, $options = array())
@@ -22,7 +22,7 @@ class EditForm extends Form
         $this->addElements();
         $this->prepare();
 
-        $this->setAttribute('action', '/accounts/process_login');
+        $this->setAttribute('action', '/accounts/other');
         $this->setAttribute('enctype', 'multipart/form-data');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('method', 'post');

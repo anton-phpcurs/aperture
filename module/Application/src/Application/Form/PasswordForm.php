@@ -88,7 +88,7 @@ class PasswordForm extends Form
     public function addInputFilter()
     {
         //-- Password (confirm) ---------------------------
-        $password_confirm = new InputFilter\Input('confirm-password');
+        $password_confirm = new InputFilter\Input('confirm_password');
         $password_confirm
             ->getValidatorChain()
             ->attach(new Validator\Identical(array(

@@ -1,6 +1,11 @@
 body {
     padding-top: 60px;
-    padding-bottom: 40px;
+    padding-bottom: 10px;
+    background: #444;
+}
+
+.bg {
+    background: url('/img/bg.jpg') no-repeat fixed;
 }
 
 .zf-green {
@@ -34,4 +39,24 @@ div.container a.brand {
     background: url("../img/zf2-logo.png") no-repeat scroll 0 10px transparent;
     margin-left: 0;
     padding: 8px 20px 12px 40px;
+}
+
+.content {
+    background: #fff;
+    padding:0;
+}
+
+.container .jumbotron {
+    background-color: #fff;
+    padding-right: 10px 10px;
+}
+
+hr{
+    border-top:1px solid #ddd;
+}
+.avatar-edit {
+    margin: 0 auto;
+    text-align: center;
+    max-width: 150px;
+
 }

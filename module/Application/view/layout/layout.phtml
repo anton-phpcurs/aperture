@@ -1,55 +1,127 @@
 <?php echo $this->doctype(); ?>
 
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <?php echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->headTitle('Aperture')?>
 
-        <?php echo $this->headMeta()
-            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
-            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
-        ?>
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
 
-        <!-- Le styles -->
-        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                        ->prependStylesheet($this->basePath('css/style.css'))
-                        ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
-                        ->prependStylesheet($this->basePath('css/bootstrap.min.css')) ?>
+    <!-- Le styles -->
+    <?php //echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+    echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/aperture.ico'))
+        ->prependStylesheet($this->basePath('css/style.css'))
+        ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
+        ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('css/jquery.Jcrop.min.css'))
+        ->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
+    ?>
+    <link rel="icon" href="/img/aperture.png">
+    <!-- Scripts -->
+    <?php echo $this->headScript()
+        ->prependFile($this->basePath('js/bootstrap.min.js'))
+        ->prependFile($this->basePath('js/jquery.min.js'))
+        ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
+        ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
+    ; ?>
 
-        <!-- Scripts -->
-        <?php echo $this->headScript()
-            ->prependFile($this->basePath('js/bootstrap.min.js'))
-            ->prependFile($this->basePath('js/jquery.min.js'))
-            ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
-            ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
-        ; ?>
+</head>
+<body class="bg">
 
-    </head>
-    <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('Skeleton Application') ?></a>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
-                    </ul>
-                </div><!--/.nav-collapse -->
-            </div>
-        </nav>
-        <div class="container">
-            <?php echo $this->content; ?>
-            <hr>
-            <footer>
-                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
-            </footer>
-        </div> <!-- /container -->
-        <?php echo $this->inlineScript() ?>
-    </body>
+<!-- img src="/img/bg.jpg" class="bg" -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Aperture"/>&nbsp;<?php echo $this->translate('Aperture') ?></a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <?php if(isset($_SESSION['id'])) {?>
+                <form class="navbar-form nav navbar-left" role="search">
+                    <input type="text" class="form-control" placeholder="Search" name="search" id="search" autocomplete="off">
+                </form>
+            <?php }?>
+
+            <ul class="nav navbar-nav navbar-right">
+                <?php if(!isset($_SESSION['id'])) {?>
+                    <li><a href="/accounts/registration"><?php echo $this->translate('Registration') ?> <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span></a></li>
+                    <li><a href="/accounts/login"><?php echo $this->translate('Login') ?> <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span></a></li>
+                <?php } else { ?>
+                    <li ><a href="/<?= $_SESSION['profile_name']?>"><?= $_SESSION['profile_name']?> <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
+                    <li ><a href="/accounts/edit">Settings <span class="glyphicon glyphicon glyphicon-cog" aria-hidden="true"></span></a></li>
+                    <li ><a href="/accounts/logout"><?php echo $this->translate('Quit') ?> <span class="glyphicon glyphicon-log-out" aria-hidden="true"></a></li>
+                <?php }?>
+            </ul>
+
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+    <?php echo $this->content; ?>
+
+    <footer>
+    </footer>
+</div> <!-- /container -->
+
+<?php echo $this->inlineScript() ?>
+<script src="/js/jquery-ui.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $("#search").on("keyup", function(event){
+            var text = $("#search").val();
+            $.ajax({
+                url: '/accounts/search',
+                type: 'POST',
+                dataType: 'json',
+                async: true,
+                data: $("#search").serialize(),
+                success: function (data, status) {
+                    var result = data['result'].valueOf();
+                    $( "#search" ).autocomplete({
+                        source: result,
+                        minLength: 1,
+                        select: function( event, ui ) {
+                            console.log( ui.item ?
+                                "Selected: " + ui.item.value + ", geonameId: " + ui.item.id :
+                                "Nothing selected, input was " + this.value
+                            );
+
+                            location.href = '/'+ ui.item.value;
+                        }
+                    });
+                },
+                error : function(xhr, textStatus, errorThrown) {
+                    if (xhr.status === 0) {
+                        console.log('Not connected. Verify Network.');
+                    } else if (xhr.status == 404) {
+                        console.log('Requested page not found. [404]');
+                    } else if (xhr.status == 500) {
+                        console.log('Server Error [500].');
+                    } else if (errorThrown === 'parsererror') {
+                        console.log('Requested JSON parse failed.');
+                    } else if (errorThrown === 'timeout') {
+                        console.log('Time out error.');
+                    } else if (errorThrown === 'abort') {
+                        console.log('Ajax request aborted.');
+                    } else {
+                        console.log('Remote sever unavailable. Please try later');
+                    }
+                }
+            });
+        })
+    });
+</script>
+
+</body>
 </html>

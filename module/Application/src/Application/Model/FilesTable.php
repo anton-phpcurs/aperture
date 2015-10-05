@@ -9,9 +9,9 @@
 namespace Application\Model;
 
 use Zend\Db\TableGateway\TableGateway;
-#use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Sql;
 
-class UsersTable
+class FilesTable
 {
     protected $tableGateway;
 
@@ -40,6 +40,23 @@ class UsersTable
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    public function getLimitBy($where = null, $limit)
+    {
+        $sql = new Sql($this->tableGateway->adapter);
+
+        $select = $sql->select();
+        $select->from('files');
+        $select->where($where);
+        $select->order('id DESC');
+        $select->limit($limit);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+
+        return $results;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
     public function save($data)
     {
         $data = $this->exchangeArray($data);
@@ -61,17 +78,10 @@ class UsersTable
     {
         $dataOut = [];
 
-        if (isset($dataIn['id']))             {$dataOut['id']           = $dataIn['id'];}
-        if (isset($dataIn['profile_name']))   {$dataOut['profile_name'] = $dataIn['profile_name'];}
-        if (isset($dataIn['email']))          {$dataOut['email']        = $dataIn['email'];}
-        if (isset($dataIn['password']))       {$dataOut['password']     = $dataIn['password'];}
-        if (isset($dataIn['full_name']))      {$dataOut['full_name']    = $dataIn['full_name'];}
-        if (isset($dataIn['bio']))            {$dataOut['bio']          = $dataIn['bio'];}
-        if (isset($dataIn['link_vk']))        {$dataOut['link_vk']      = $dataIn['link_vk'];}
-        if (isset($dataIn['link_fb']))        {$dataOut['link_fb']      = $dataIn['link_fb'];}
-        if (isset($dataIn['link_tw']))        {$dataOut['link_tw']      = $dataIn['link_tw'];}
-        if (isset($dataIn['link_skype']))     {$dataOut['link_skype']    = $dataIn['link_skype'];}
-        if (isset($dataIn['link_site']))      {$dataOut['link_site']    = $dataIn['link_site'];}
+        if (isset($dataIn['id']))      {$dataOut['id']      = $dataIn['id'];}
+        if (isset($dataIn['id_user'])) {$dataOut['id_user'] = $dataIn['id_user'];}
+        if (isset($dataIn['path']))    {$dataOut['path']    = $dataIn['path'];}
+        if (isset($dataIn['likes']))   {$dataOut['likes']   = $dataIn['likes'];}
 
         return $dataOut;
     }

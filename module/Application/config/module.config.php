@@ -13,7 +13,9 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => Controller\IndexController::class,
-            'Application\Controller\Accounts' => 'Application\Controller\AccountsController'
+            'Application\Controller\Profiles'   => 'Application\Controller\ProfilesController',
+            'Application\Controller\Accounts'   => 'Application\Controller\AccountsController',
+            'Application\Controller\Files'      => 'Application\Controller\FilesController',
         ),
     ),
 
@@ -63,6 +65,35 @@ return array(
                 ),
             ),
 
+            // Profiles [/:profile_name/:action/:id] -------------------------------------------------------------------
+            'profiles' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/:profile_name[/]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller'    => 'Profiles',
+                        'action'        => 'index',
+                        'profile_name'  => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '[/]:action',
+                            'constraints' => array(
+                                'controller' => 'Profiles',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+
             // Accounts [/accounts/:action/:id] ------------------------------------------------------------------------
             'accounts' => array(
                 'type'    => 'Literal',
@@ -91,6 +122,37 @@ return array(
                     ),
                 ),
             ),
+
+            // Files [/files/:action/:id] ------------------------------------------------------------------------
+            'files' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/files',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller'    => 'Files',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:action[/[:id]]]',
+                            'constraints' => array(
+                                'controller' => 'Files',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'         => '[a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+
+
         ),
     ),
     'service_manager' => array(

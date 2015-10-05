@@ -13,10 +13,10 @@ use Zend\View\Model\ViewModel;
 
 use Application\Form\RegistrationForm;
 use Application\Form\LoginForm;
-use Application\Form\EditForm;
 
 use Application\Form\EmailForm;
 use Application\Form\PasswordForm;
+use Application\Form\OtherForm;
 
 class AccountsController extends AbstractActionController
 {
@@ -56,8 +56,8 @@ class AccountsController extends AbstractActionController
         $profile['email_current'] = $profile['email'];
         $profile['email'] = '';
 
-        $formEdit = new EditForm();
-        $formEdit->setData($profile);
+        $formOther = new OtherForm();
+        $formOther->setData($profile);
 
         $formEmail = new EmailForm();
         $formEmail->setData($profile);
@@ -68,7 +68,7 @@ class AccountsController extends AbstractActionController
         $view = new ViewModel(array(
                 'formEmail' => $formEmail,
                 'formPassword' => $formPassword,
-                'formEdit' => $formEdit,
+                'formOther' => $formOther,
             )
         );
         $view->setTemplate('accounts/edit');
@@ -124,7 +124,6 @@ class AccountsController extends AbstractActionController
         $profile['password'] = md5($profile['password']);
 
         $this->getUsersTable()->save($profile);
-
         $profile = $this->getUsersTable()->getOneBy(array('profile_name' => $profile['profile_name']));
 
         $_SESSION['id']             = $profile['id'];
@@ -143,29 +142,175 @@ class AccountsController extends AbstractActionController
         }
         $post = $this->request->getPost();
 
-        $userInfo = $this->getUsersTable()->getOneBy(array(
+        // Validation form ----
+        $formLogin = new LoginForm();
+        $formLogin->setData($post);
+
+        if (!$formLogin->isValid()) {
+            $model = new ViewModel(array(
+                'formLogin' => $formLogin,
+                'message' => '111',
+                'error' => true,
+            ));
+            $model->setTemplate('accounts/login');
+            return $model;
+        }
+
+        // Validation auth
+        $profile = $this->getUsersTable()->getOneBy(array(
             'profile_name' => $post['profile_name'],
             'password'     => md5($post['password'])
         ));
 
-        if ($userInfo) {
-            $_SESSION['id']             = $userInfo->id;
-            $_SESSION['profile_name']   = $userInfo->profile_name;
-            $_SESSION['email']          = $userInfo->email;
-            $_SESSION['password']       = $userInfo->password;
-            $this->redirect()->toUrl('/' . $userInfo->profile_name);
+        if (!$profile) {
+            $view = new ViewModel(array(
+                    'formLogin'  => $formLogin,
+                    'message' => 'Incorrect Profile name or Password.',
+                    'error' => true
+                )
+            );
+            $view->setTemplate('accounts/login');
+            return $view;
         }
 
-        $formLogin = new LoginForm();
-        $formLogin->setData($post);
+        $_SESSION['id']           = $profile['id'];
+        $_SESSION['profile_name'] = $profile['profile_name'];
+        $_SESSION['email']        = $profile['email'];
+        $_SESSION['password']     = $profile['password'];
 
-        $view = new ViewModel(array(
-                'formLogin'  => $formLogin,
-                'error' => true
-            )
-        );
-        $view->setTemplate('accounts/login');
-        return $view;
+        $this->redirect()->toUrl('/' . $profile['profile_name']);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function emailAction()
+    {
+        if (!$this->getRequest()->isPost()){
+            $this->redirect()->toUrl('/accounts/edit');
+        }
+        $post = $this->request->getPost();
+        $profile = $this->getUsersTable()->getOneBy(array('id' => $_SESSION['id']));
+        $profile['email_current'] = $profile['email'];
+
+        // Validation forms ----
+        $formEmail = new EmailForm();
+        $formEmail->setData($post);
+
+        $formPassword = new PasswordForm();
+        $formPassword->setData($profile);
+
+        $formOther = new OtherForm();
+        $formOther->setData($profile);
+
+        if (!$formEmail->isValid()) {
+            $model = new ViewModel(array(
+                'formEmail' => $formEmail,
+                'formPassword' => $formPassword,
+                'formOther' => $formOther,
+                'message' => '',
+                'error' => true,
+            ));
+            $model->setTemplate('accounts/edit');
+            return $model;
+        }
+
+        // Validation email in db
+        $post['id'] = $profile['id'];
+        $profile_exist = $this->getUsersTable()->getOneBy(array('email' => $post['email']));
+
+        if ($profile_exist && ($profile_exist->id != $post['id'])) {
+            $model = new ViewModel(array(
+                'formEmail' => $formEmail,
+                'formPassword' => $formPassword,
+                'formOther' => $formOther,
+                'message' => 'E-mail address already exists.',
+                'error' => true,
+            ));
+            $model->setTemplate('accounts/edit');
+            return $model;
+        }
+
+        $this->getUsersTable()->save($post);
+        $_SESSION['email'] = $post['email'];
+
+        $this->redirect()->toUrl('/accounts');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function passwordAction()
+    {
+        if (!$this->getRequest()->isPost()){
+            $this->redirect()->toUrl('/accounts/edit');
+        }
+        $post = $this->request->getPost();
+        $profile = $this->getUsersTable()->getOneBy(array('id' => $_SESSION['id']));
+        $profile['email_current'] = $profile['email'];
+        $profile['email'] = '';
+
+        // Validation forms ----
+        $formEmail = new EmailForm();
+        $formEmail->setData($profile);
+
+        $formPassword = new PasswordForm();
+        $formPassword->setData($post);
+
+        $formOther = new OtherForm();
+        $formOther->setData($profile);
+
+        if (!$formPassword->isValid()) {
+            $model = new ViewModel(array(
+                'formEmail' => $formEmail,
+                'formPassword' => $formPassword,
+                'formOther' => $formOther,
+                'message' => '',
+                'error' => true,
+            ));
+            $model->setTemplate('accounts/edit');
+            return $model;
+        }
+
+        // Validation password in db
+        $post['password_current'] = md5($post['password_current']);
+        $post['password']         = md5($post['password']);
+        $post['id']               = $profile['id'];
+
+        if ($profile['password'] != $post['password_current']) {
+            $model = new ViewModel(array(
+                'formEmail' => $formEmail,
+                'formPassword' => $formPassword,
+                'formOther' => $formOther,
+                'message' => 'Password is not changed. <br> Access denied.',
+                'error' => true,
+            ));
+            $model->setTemplate('accounts/edit');
+            return $model;
+        }
+
+        $this->getUsersTable()->save($post);
+        $_SESSION['password'] = $post['password'];
+
+        $this->redirect()->toUrl('/accounts');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function otherAction()
+    {
+        if (!$this->getRequest()->isPost()){
+            $this->redirect()->toUrl('/accounts/login');
+        }
+
+        $profile = $this->getUsersTable()->getOneBy(array('id' => $_SESSION['id']));
+        $post = $this->request->getPost();
+        $post['id'] = $profile['id'];
+
+        $this->getUsersTable()->save($post);
+        $this->redirect()->toUrl('/accounts/');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function logoutAction()
+    {
+        session_destroy();
+        $this->redirect()->toUrl('/');
     }
 
     // Helper function =================================================================================================

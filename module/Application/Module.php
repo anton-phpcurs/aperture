@@ -17,6 +17,7 @@ use Application\Model;
 
 class Module
 {
+    //------------------------------------------------------------------------------------------------------------------
     public function onBootstrap(MvcEvent $e)
     {
         $eventManager        = $e->getApplication()->getEventManager();
@@ -24,11 +25,13 @@ class Module
         $moduleRouteListener->attach($eventManager);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     public function getAutoloaderConfig()
     {
         return array(
@@ -40,6 +43,7 @@ class Module
         );
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     public function getServiceConfig()
     {
         return array(
@@ -48,6 +52,11 @@ class Module
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $tableGateway = new TableGateway('users', $dbAdapter);
                     return new Model\UsersTable($tableGateway);
+                },
+                'filesTable' =>  function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $tableGateway = new TableGateway('files', $dbAdapter);
+                    return new Model\FilesTable($tableGateway);
                 },
             ),
         );
