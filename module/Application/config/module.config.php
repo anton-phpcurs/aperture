@@ -10,6 +10,13 @@
 namespace Application;
 
 return array(
+    'controllers' => array(
+        'invokables' => array(
+            'Application\Controller\Index' => Controller\IndexController::class,
+            'Application\Controller\Accounts' => 'Application\Controller\AccountsController'
+        ),
+    ),
+
     'router' => array(
         'routes' => array(
             'home' => array(
@@ -22,7 +29,9 @@ return array(
                     ),
                 ),
             ),
-            // Application ------------------------------------------------------------------------------------------------
+
+            // Application [/application/:controller/:action] ----------------------------------------------------------
+
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
@@ -37,7 +46,7 @@ return array(
                         'action'        => 'index',
                     ),
                 ),
-/*                'may_terminate' => true,
+                'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
                         'type'    => 'Segment',
@@ -51,11 +60,10 @@ return array(
                             ),
                         ),
                     ),
-                ),*/
+                ),
             ),
 
-
-            // Accounts ------------------------------------------------------------------------------------------------
+            // Accounts [/accounts/:action/:id] ------------------------------------------------------------------------
             'accounts' => array(
                 'type'    => 'Literal',
                 'options' => array(
@@ -64,6 +72,22 @@ return array(
                         '__NAMESPACE__' => 'Application\Controller',
                         'controller'    => 'Accounts',
                         'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:action[/[:id]]]',
+                            'constraints' => array(
+                                'controller' => 'Accounts',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'         => '[a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                            ),
+                        ),
                     ),
                 ),
             ),
@@ -88,12 +112,7 @@ return array(
             ),
         ),
     ),
-    'controllers' => array(
-        'invokables' => array(
-            'Application\Controller\Index' => Controller\IndexController::class,
-            'Application\Controller\Accounts' => 'Application\Controller\AccountsController'
-        ),
-    ),
+
     'view_manager' => array(
         'display_not_found_reason' => true,
         'display_exceptions'       => true,

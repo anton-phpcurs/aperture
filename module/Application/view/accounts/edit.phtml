@@ -1,0 +1,389 @@
+<section class="Login">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Email</h3>
+                </div>
+                <div class="panel-body">
+                    <?php if ($this->error): ?>
+                        <p class="error"> <?= $message; ?> </p>
+                    <?php endif ?>
+                    <?php
+                        $formEmail = $this->formEmail;
+                        echo $this->form()->openTag($formEmail);
+                    ?>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEmail->get('email_current')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEmail->get('email_current'));?>
+                            <?= $this->formElementErrors($formEmail->get('email_current')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEmail->get('email')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEmail->get('email'));?>
+                            <?= $this->formElementErrors($formEmail->get('email')); ?>
+                        </div>
+                    </div>
+                    <div class="control-label pull-left">
+                        <?= $this->formElement($formEmail->get('submit'));?>
+                    </div>
+                    <?php echo $this->form()->closeTag() ?>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Password</h3>
+                </div>
+                <div class="panel-body">
+                    <?php if ($this->error): ?>
+                        <p class="error"> <?= $message; ?> </p>
+                    <?php endif ?>
+                    <?php
+                    $formPassword = $this->formPassword;
+                    echo $this->form()->openTag($formPassword);
+                    ?>
+                    <div class="control-group">
+                        <?=$this->formLabel($formPassword->get('password_current')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formPassword->get('password_current'));?>
+                            <?= $this->formElementErrors($formPassword->get('password_current')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formPassword->get('password')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formPassword->get('password'));?>
+                            <?= $this->formElementErrors($formPassword->get('password')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formPassword->get('confirm_password')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formPassword->get('confirm_password'));?>
+                            <?= $this->formElementErrors($formPassword->get('confirm_password')); ?>
+                        </div>
+                    </div>
+                    <div class="control-label pull-left">
+                        <?= $this->formElement($formPassword->get('submit'));?>
+                    </div>
+                    <?php echo $this->form()->closeTag() ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Other</h3>
+                </div>
+                <div class="panel-body">
+                    <?php if ($this->error): ?>
+                        <p class="error"> <?= $message; ?> </p>
+                    <?php endif ?>
+                    <?php
+                    $formEdit = $this->formEdit;
+                    echo $this->form()->openTag($formEdit);
+                    ?>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEdit->get('full_name')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEdit->get('full_name'));?>
+                            <?= $this->formElementErrors($formEdit->get('full_name')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEdit->get('bio')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEdit->get('bio'));?>
+                            <?= $this->formElementErrors($formEdit->get('bio')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEdit->get('link_skype')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEdit->get('link_skype'));?>
+                            <?= $this->formElementErrors($formEdit->get('link_skype')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEdit->get('link_site')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEdit->get('link_site'));?>
+                            <?= $this->formElementErrors($formEdit->get('link_site')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEdit->get('link_vk')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEdit->get('link_vk'));?>
+                            <?= $this->formElementErrors($formEdit->get('link_vk')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEdit->get('link_fb')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEdit->get('link_fb'));?>
+                            <?= $this->formElementErrors($formEdit->get('link_fb')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formEdit->get('link_tw')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formEdit->get('link_tw'));?>
+                            <?= $this->formElementErrors($formEdit->get('link_tw')); ?>
+                        </div>
+                    </div>
+
+                    <div class="control-label pull-left">
+                        <?= $this->formElement($formPassword->get('submit'));?>
+                    </div>
+                    <?php echo $this->form()->closeTag() ?>
+                </div>
+            </div>
+
+            <?php /*  //----------------------------------------------------------------------------------------------- ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Password</h3>
+                </div>
+                <div class="panel-body">
+
+                    <?php if (isset($emessage)): ?>
+                        <p class="error">
+                            <?=$emessage;?>
+                        </p>
+                    <?php endif ?>
+
+                    <?php
+                    $formPassword = $this->formPassword;
+                    $formPassword->prepare();
+                    $formPassword->setAttribute('action',
+                        $this->url(
+                            NULL,
+                            array('controller'=>'Accounts', 'action' => 'password')
+                        )
+                    );
+                    $formPassword->setAttribute('method', 'post');
+                    echo $this->form()->openTag($formPassword);
+                    ?>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">Curent</label>
+                        <div class="controls">
+                            <?= $this->formElement($formPassword->get('password_old')); ?>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">New</label>
+                        <div class="controls">
+                            <?= $this->formElement($formPassword->get('password')); ?>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">Confirm</label>
+                        <div class="controls">
+                            <?php
+                            echo $this->formElement($formPassword->get('confirm_password'));
+                            echo $this->formElementErrors($formPassword->get('confirm_password'));
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="control-label pull-left">
+                        <?php
+                        echo $this->formElement($formPassword->get('submit'));
+                        ?>
+                    </div>
+
+                    <?php echo $this->form()->closeTag()  ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <?php //------------------------------------------------------------------------------------------------------------- ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Other</h3>
+                </div>
+                <div class="panel-body">
+
+                    <?php if (isset($emessage)): ?>
+                        <p class="error">
+                            <?=$emessage;?>
+                        </p>
+                    <?php endif ?>
+
+
+                    <?php
+                    $formEdit = $this->formEdit;
+                    $formEdit->prepare();
+                    $formEdit->setAttribute('action', $this->url(NULL,
+                        array('controller'=>'Accounts', 'action' => 'save')));
+                    $formEdit->setAttribute('method', 'post');
+                    echo $this->form()->openTag($formEdit);
+                    ?>
+
+                    <div class="control-group">
+                        <label class="control-label" for="Confirm password">Full name</label>
+                        <div class="controls">
+                            <?php
+                            echo $this->formElement($formEdit->get('full_name'));
+                            //echo $this->formElementErrors($form->get('confirm_password'));
+                            ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="Confirm password">Bio</label>
+                        <div class="controls">
+                            <?php
+                            echo $this->formElement($formEdit->get('bio'));
+                            //echo $this->formElementErrors($form->get('confirm_password'));
+                            ?>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="control-group">
+                        <label class="control-label" for="Confirm password">Skype</label>
+                        <div class="controls">
+                            <?php
+                            echo $this->formElement($formEdit->get('link_skype'));
+                            //echo $this->formElementErrors($form->get('confirm_password'));
+                            ?>
+                        </div>
+                    </div>
+
+
+                    <div class="control-group">
+                        <label class="control-label" for="Confirm password">Link my site</label>
+                        <div class="controls">
+                            <?php
+                            echo $this->formElement($formEdit->get('link_site'));
+                            //echo $this->formElementErrors($form->get('confirm_password'));
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="Confirm password">Link VKontakte</label>
+                        <div class="controls">
+                            <?php
+                            echo $this->formElement($formEdit->get('link_vk'));
+                            //echo $this->formElementErrors($form->get('confirm_password'));
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="Confirm password">Link Facebook</label>
+                        <div class="controls">
+                            <?php
+                            echo $this->formElement($formEdit->get('link_fb'));
+                            //echo $this->formElementErrors($form->get('confirm_password'));
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="Confirm password">Link Twitter</label>
+                        <div class="controls">
+                            <?php
+                            echo $this->formElement($formEdit->get('link_tw'));
+                            //echo $this->formElementErrors($form->get('confirm_password'));
+                            ?>
+                        </div>
+                    </div>
+                    <div class="control-label pull-left">
+                        <?php
+                        echo $this->formElement($formEdit->get('submit'));
+                        ?>
+
+                    </div>
+
+                    <?php echo $this->form()->closeTag() ?>
+
+
+                </div>
+            </div>
+
+*/?>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<?php /*
+
+
+
+
+
+
+
+
+<section class="Login">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Registration</h3>
+                </div>
+                <div class="panel-body">
+                    <?php if ($this->error): ?>
+                        <p class="error">
+                            There were one or more issues with your submission.
+                            Please correct them as indicated below.
+                        </p>
+                    <?php endif ?>
+
+                    <?php
+                        $formRegistration = $this->formRegistration;
+                        echo $this->form()->openTag($formRegistration);
+                    ?>
+                    <div class="control-group">
+                        <?=$this->formLabel($formRegistration->get('profile-name')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formRegistration->get('profile-name'));?>
+                            <?= $this->formElementErrors($formRegistration->get('profile-name')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formRegistration->get('email')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formRegistration->get('email'));?>
+                            <?= $this->formElementErrors($formRegistration->get('email')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formRegistration->get('password')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formRegistration->get('password')); ?>
+                            <?= $this->formElementErrors($formRegistration->get('password')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formRegistration->get('confirm-password')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formRegistration->get('confirm-password'));?>
+                            <?= $this->formElementErrors($formRegistration->get('confirm-password')); ?>
+                        </div>
+                    </div>
+                    <div class="control-label pull-left">
+                        <?= $this->formElement($formRegistration->get('submit'));?>
+                    </div>
+                    <?= $this->form()->closeTag(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+ */

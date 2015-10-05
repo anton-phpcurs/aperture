@@ -1,0 +1,52 @@
+<section class="Login">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Registration</h3>
+                </div>
+                <div class="panel-body">
+                    <?php if ($this->error): ?>
+                        <p class="error"> <?= $message; ?> </p>
+                    <?php endif ?>
+                    <?php
+                        $formRegistration = $this->formRegistration;
+                        echo $this->form()->openTag($formRegistration);
+                    ?>
+                    <div class="control-group">
+                        <?=$this->formLabel($formRegistration->get('profile_name')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formRegistration->get('profile_name'));?>
+                            <?= $this->formElementErrors($formRegistration->get('profile_name')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formRegistration->get('email')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formRegistration->get('email'));?>
+                            <?= $this->formElementErrors($formRegistration->get('email')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formRegistration->get('password')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formRegistration->get('password')); ?>
+                            <?= $this->formElementErrors($formRegistration->get('password')); ?>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <?=$this->formLabel($formRegistration->get('confirm_password')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formRegistration->get('confirm_password'));?>
+                            <?= $this->formElementErrors($formRegistration->get('confirm_password')); ?>
+                        </div>
+                    </div>
+                    <div class="control-label pull-left">
+                        <?= $this->formElement($formRegistration->get('submit'));?>
+                    </div>
+                    <?= $this->form()->closeTag(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

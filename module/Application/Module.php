@@ -12,6 +12,9 @@ namespace Application;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
+use Zend\Db\TableGateway\TableGateway;
+use Application\Model;
+
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -33,6 +36,19 @@ class Module
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),
+            ),
+        );
+    }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'UsersTable' =>  function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $tableGateway = new TableGateway('users', $dbAdapter);
+                    return new Model\UsersTable($tableGateway);
+                },
             ),
         );
     }
