@@ -40,15 +40,14 @@ class FilesTable
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    public function getLimitBy($where = null, $limit)
+    public function getNews()
     {
         $sql = new Sql($this->tableGateway->adapter);
 
         $select = $sql->select();
         $select->from('files');
-        $select->where($where);
         $select->order('id DESC');
-        $select->limit($limit);
+        $select->limit(10);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();

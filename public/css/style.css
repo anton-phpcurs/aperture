@@ -60,3 +60,4 @@ hr{
     max-width: 150px;
 
 }
+.ui-autocomplete { position: absolute; cursor: default;z-index:3000 !important;}

@@ -9,7 +9,7 @@
 namespace Application\Model;
 
 use Zend\Db\TableGateway\TableGateway;
-#use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Sql;
 
 class UsersTable
 {
@@ -37,6 +37,27 @@ class UsersTable
     public function getOneBy($where = null)
     {
         return $this->tableGateway->select($where)->current();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function search($profile_name)
+    {
+        $sql = new Sql($this->tableGateway->adapter);
+        $where = new \Zend\Db\Sql\Where();
+
+        $select = $sql->select();
+        $select->from('users');
+
+        $where->like('profile_name', '%'.$profile_name.'%');
+        $select->where($where);
+
+        $select->order('profile_name');
+        $select->limit(15);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+
+        return $results;
     }
 
     //------------------------------------------------------------------------------------------------------------------

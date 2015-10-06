@@ -16,6 +16,20 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return new ViewModel();
+        if (!isset($_SESSION['profile_name'])) {
+            return new ViewModel();
+        };
+
+        $files = $this->getFilesTable()->getNews();
+
+        $view = new ViewModel(array('files' => $files));
+        $view->setTemplate('application/news');
+        return $view;
+    }
+
+    // Helper function =================================================================================================
+    public function getFilesTable()
+    {
+        return $this->getServiceLocator()->get('FilesTable');
     }
 }

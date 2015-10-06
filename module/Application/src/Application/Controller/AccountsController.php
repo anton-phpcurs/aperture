@@ -10,6 +10,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 
 use Application\Form\RegistrationForm;
 use Application\Form\LoginForm;
@@ -304,6 +305,52 @@ class AccountsController extends AbstractActionController
 
         $this->getUsersTable()->save($post);
         $this->redirect()->toUrl('/accounts/');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function searchAction()
+    {
+        $profile_name = $this->request->getPost('search');
+
+        $users = $this->getUsersTable()->search($profile_name);
+
+        foreach($users as $user) {
+            $result[] = $user['profile_name'];
+        }
+
+        $view = new JsonModel(array(
+            'result' => $result,
+            'success'=>true,
+        ));
+
+        return $view;
+/*
+
+
+        //$profile_name = $this->request->getPost('search');
+        $profile_name = 'anton';
+
+        $profiles = $this->getUsersTable()->getManyBy(array('profile_name' => $profile_name));
+
+        foreach($profiles as $profiles) {
+           $result[] = $profiles['profile_name'];
+        }
+
+
+        //echo 'sdfgsdfg';
+        //die();
+        //echo "I get param1 = ".$_POST['param1']." and param2 = ".$_POST['param2'];
+
+        $view = new JsonModel(array(
+            'result' => $result,
+            //'result' => ['an', 'anton', 'alex'],
+            'success'=>true,
+        ));
+
+        //var_dump($view);
+        //die($view);
+
+        return $view;*/
     }
 
     //------------------------------------------------------------------------------------------------------------------

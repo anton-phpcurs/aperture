@@ -151,8 +151,6 @@ return array(
                     ),
                 ),
             ),
-
-
         ),
     ),
     'service_manager' => array(
@@ -181,6 +179,9 @@ return array(
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
+        'strategies' => array(
+            'ViewJsonStrategy',
+        ),
         'template_map' => array(
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
