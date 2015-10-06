@@ -24,7 +24,7 @@ class UploadForm extends Form
         $this->addElements();
         $this->prepare();
 
-        $this->setAttribute('action', '/files/save');
+        $this->setAttribute('action', '/files/edit');
         $this->setAttribute('enctype', 'multipart/form-data');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('method', 'post');
@@ -62,7 +62,7 @@ class UploadForm extends Form
         $file = new InputFilter\Input('file');
         $file->getValidatorChain()
                 //->attach(new Validator\File\MimeType(('image', 'audio')))
-                ->attach(new Validator\File\Size(array('max' => 250480)))
+                ->attach(new Validator\File\Size(array('max' => 3100000)))
                 ->attach(new Validator\File\ImageSize(array(
                     'minWidth' => 600, 'minHeight' => 600,
                 )));

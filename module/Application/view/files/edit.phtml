@@ -1,0 +1,46 @@
+<section>
+    <div class="row">
+        <div class="col-md-12 col-md-offset-0">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Edit</h3>
+                </div>
+                <div class="panel-body cropbox">
+                    <img src="<?=$path; ?>" id="target">
+                    <p></p>
+                    <form class="coords" method="post" action="/files/save">
+                        <input type="hidden" id="x" name="x">
+                        <input type="hidden" id="y" name="y">
+                        <input type="hidden" id="w" name="w">
+                        <input type="hidden" id="h" name="h">
+                        <input type="hidden" id="path" name="path" value="<?=$path;?>">
+                        <input type="submit" name="submit" value="Save" class="btn btn-success">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script language="Javascript">
+    jQuery(function($) {
+        $('#target').Jcrop({
+            minSize: [600, 600],
+            boxWidth: 500,
+            boxHeight: 500,
+            aspectRatio: 1,
+            trueSize: [<?=$width;?>, <?=$height;?>],
+            onSelect: showCoords,
+            onChange: showCoords
+        });
+    });
+
+    function showCoords(c) {
+        jQuery('#x').val(c.x);
+        jQuery('#y').val(c.y);
+        jQuery('#w').val(c.w);
+        jQuery('#h').val(c.h);
+    }
+
+</script>

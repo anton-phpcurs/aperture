@@ -14,13 +14,15 @@
     <?php //echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
     echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/aperture.ico'))
         ->prependStylesheet($this->basePath('css/style.css'))
+        ->prependStylesheet($this->basePath('css/jquery.Jcrop.min.css'))
+        ->prependStylesheet($this->basePath('css/jquery-ui.min.css'))
         ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
-        ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
-        ->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
+        ->prependStylesheet($this->basePath('css/bootstrap.min.css'));
     ?>
     <link rel="icon" href="/img/aperture.png">
     <!-- Scripts -->
     <?php echo $this->headScript()
+        ->prependFile($this->basePath('js/jquery.Jcrop.min.js'))
         ->prependFile($this->basePath('js/jquery-ui.min.js'))
         ->prependFile($this->basePath('js/bootstrap.min.js'))
         ->prependFile($this->basePath('js/jquery.min.js'))
@@ -77,64 +79,15 @@
 
 <script>
     $(document).ready(function() {
+        $(".galery-image").on('click', function(event){
+            var id = this.id;
+
+            $('#comment').text(id);
+            $('#modal').modal('toggle');
+        });
+
         $("#search").on("keyup", function(event){
             var text = $("#search").val();
-/*
-            $.ajax({
-                url: '/accounts/search',
-                type: 'POST',
-                dataType: 'json',
-                async: true,
-                data: $("#search").serialize(),
-                success: function(data){
-                    alert('Load was performed.' + data );
-                    var result = data['result'].valueOf();
-                    $( "#search" ).autocomplete({
-                        source: result,
-                        minLength: 1,
-                        select: function( event, ui ) {
-                            console.log( ui.item ?
-                                "Selected: " + ui.item.value + ", geonameId: " + ui.item.id :
-                                "Nothing selected, input was " + this.value
-                            );
-
-                            location.href = '/'+ ui.item.value;
-                        }
-                    });
-                }
-            });
-
-/*
-            // На сервер будет отправлен запрос страницы http://hostname/ajaxtest.php и указаны два параметра.
-            // После получения ответа от сервера будет вызвана функция onAjaxSuccess, которая выведет
-            // на экран сообщение с данными, присланными сервером.
-            $.post(
-                "/accounts/search",
-                $("#search").serialize(),
-                onAjaxSuccess
-            );
-
-            function onAjaxSuccess(data, status)
-            {
-                // Здесь мы получаем данные, отправленные сервером и выводим их на экран.
-                //alert(data);
-                var result = data['result'].valueOf();
-                $( "#search" ).autocomplete({
-                    source: result,
-                    minLength: 1,
-                    select: function( event, ui ) {
-                        console.log( ui.item ?
-                            "Selected: " + ui.item.value + ", geonameId: " + ui.item.id :
-                            "Nothing selected, input was " + this.value
-                        );
-
-                        location.href = '/'+ ui.item.value;
-                    }
-                });
-            }
-
-
-*/
             $.ajax({
                 url: 'http://test-c.loc/accounts/search',
                 type: 'POST',

@@ -1,7 +1,7 @@
-<div class="jumbotron">
+<div class="jumbotron" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="col-md-2 col-md-offset-0">
-            <img src="/img/avatar.png" class="img-circle avatar-edit center-block">
+            <img src="/img/avatar.png" alt="..." class="img-circle avatar-edit center-block">
         </div>
 
         <div class="col-md-8 col-md-offset-0">
@@ -10,13 +10,13 @@
                     <?php echo $profile_name; ?>
                 </span>
             </h1>
+            <a class="btn btn-success" href="/<?= $_SESSION['profile_name']?>/about">About <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
             <div class="btn-group" role="group" aria-label="...">
                 <button type="button" class="btn btn-primary">Photos <span class="badge">0</span></button>
                 <button type="button" class="btn btn-primary">Following <span class="badge">0</span></button>
                 <button type="button" class="btn btn-primary">Followers <span class="badge">0</span></button>
             </div>
-            <a href="">Photos 5</a> | <a href="">Followers 45</a> | <a href="">Following 10</a>
-            <a href="/files/upload">Upload <span class="glyphicon glyphicon-open" aria-hidden="true"></span> | Edit <span class="glyphicon glyphicon-picture" aria-hidden="true"></span></a>
+            <a class="btn btn-success" href="/files/upload">Upload <span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
         </div>
     </div>
 </div>
@@ -41,7 +41,7 @@
 
 
 
-<script>
+<!--script>
     $(document).ready(function() {
         $(".galery-image").on('click', function(event){
             var id = this.id;
@@ -95,4 +95,4 @@
          });
          })*/
     });
-</script>
+</script-->
