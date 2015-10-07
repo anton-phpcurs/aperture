@@ -53,7 +53,6 @@ class FilesController extends AbstractActionController
         }
 
         $tmpFileName = $post['file']['tmp_name'];
-        var_dump($post['file']);
         $file = getimagesize ($tmpFileName);
 
         if(!$file || ($file[2] > 3)){
@@ -75,27 +74,47 @@ class FilesController extends AbstractActionController
         $data = $formUpload->getData();
         $tmpFileName = $data['file']['tmp_name'];
 
-        $folderName = '/files/' . md5($_SESSION['id']);
-        $fileName = md5(basename($tmpFileName)) . $ext;
+        $folderName = '/files/' . md5($_SESSION['id']) . '/';
+        $fileName = md5(basename($tmpFileName));
 
-        $newFolder = './public' . $folderName;
+        $newFolder = './public' . $folderName ;
 
         if (!file_exists($newFolder)) {
             mkdir($newFolder);
         }
 
-        $newFileName = $newFolder . '/' . $fileName;
+        $newFileName = $newFolder . $fileName . $ext;
+
+        //die($newFileName);
 
         rename($tmpFileName, $newFileName);
 
         $model = new ViewModel(array(
             'width' => $file[0],
             'height' => $file[1],
-            'path' => $folderName .'/'.$fileName,
+            //'path' => $folderName .'/'.$fileName,
+            'folder' => $folderName,
+            'name' => $fileName,
+            'ext' => $ext
         ));
         $model->setTemplate('files/edit');
         return $model;
     }
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function viewAction()
+    {
+        $file_name = $this->params()->fromRoute('id');
+        $file = $this->getFilesTable()->getOneBy(array('name' => $file_name));
+
+        $model = new ViewModel(array(
+            'file' => $file
+        ));
+        $model->setTemplate('files/view');
+        return $model;
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
     public function saveAction()
@@ -104,23 +123,47 @@ class FilesController extends AbstractActionController
         $target_h = 600;
         $jpeg_quality = 95;
 
-        $src = APP_DIR . '/public' .$_POST['path'];
+        $src = APP_DIR . '/public' . $_POST['folder'] . $_POST['name'] . $_POST['ext'];
+
         $img_r = $this->imageCreateFromAny($src);
-        $dst_r = ImageCreateTrueColor($target_w, $target_h);
+        $file = getimagesize ($src);
 
-        imagecopyresampled($dst_r, $img_r, 0, 0, $_POST['x'], $_POST['y'],
-                                $target_w, $target_h, $_POST['w'], $_POST['h']);
+        if ($file[2] == 3) {
+            $img_r = imageCreateFromPng($src);
+            $dst_r = ImageCreateTrueColor($target_w, $target_h);
 
-#        header('Content-type: image/jpeg');
-#        imagejpeg($dst_r);
-        imagejpeg($dst_r, $src, $jpeg_quality);
+            imagealphablending($dst_r, false);
+            $color = imagecolorallocatealpha($dst_r, 255, 255, 255, 127);
+            imagefilledrectangle($dst_r, 0, 0, $target_w, $target_h, $color);
+
+            imagealphablending($dst_r, true);
+            imagecopyresampled($dst_r, $img_r, 0, 0, $_POST['x'], $_POST['y'],
+                $target_w, $target_h, $_POST['w'], $_POST['h']);
+
+            imagealphablending($dst_r,false);
+            imagesavealpha($dst_r, true);
+            imagepng($dst_r, $src, 1);
+        } else {
+            $dst_r = ImageCreateTrueColor($target_w, $target_h);
+            imagecolorallocate($dst_r, 255, 255, 255);
+            imagecopyresampled($dst_r, $img_r, 0, 0, $_POST['x'], $_POST['y'],
+                $target_w, $target_h, $_POST['w'], $_POST['h']);
+
+#           header('Content-type: image/jpeg');
+#           imagejpeg($dst_r);
+            imagejpeg($dst_r, $src, $jpeg_quality);
+        }
 
         $post['id_user'] = $_SESSION['id'];
-        $post['path'] = $_POST['path'];
+        $post['folder'] = $_POST['folder'];
+        $post['name'] = $_POST['name'];
+        $post['ext'] = $_POST['ext'];
+
         $this->getFilesTable()->save($post);
 
         return $this->redirect()->toUrl('/'. $_SESSION['profile_name']);
     }
+
 
     // Helper function =================================================================================================
     //------------------------------------------------------------------------------------------------------------------

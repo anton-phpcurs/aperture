@@ -1,19 +1,21 @@
 <section>
     <div class="row">
         <div class="col-md-12 col-md-offset-0">
-            <div class="panel panel-default">
+            <div class="panel panel-default" >
                 <div class="panel-heading">
-                    <h3 class="panel-title">Edit</h3>
+                    <h3 class="panel-title" id="container-size">Edit</h3>
                 </div>
-                <div class="panel-body cropbox">
-                    <img src="<?=$path; ?>" id="target">
-                    <p></p>
+                <div class="panel-body cropbox" >
+
+                    <p style="border: 1px dashed #ccc"><img src="<?=$folder . $name . $ext; ?>" id="target"></p>
                     <form class="coords" method="post" action="/files/save">
                         <input type="hidden" id="x" name="x">
                         <input type="hidden" id="y" name="y">
                         <input type="hidden" id="w" name="w">
                         <input type="hidden" id="h" name="h">
-                        <input type="hidden" id="path" name="path" value="<?=$path;?>">
+                        <input type="hidden" id="folder" name="folder" value="<?=$folder; ?>">
+                        <input type="hidden" id="name" name="name" value="<?=$name; ?>">
+                        <input type="hidden" id="ext" name="ext" value="<?=$ext; ?>">
                         <input type="submit" name="submit" value="Save" class="btn btn-success">
                     </form>
                 </div>
@@ -24,13 +26,17 @@
 
 
 <script language="Javascript">
-    jQuery(function($) {
+    var w = parseInt($('#container-size').css('width'))-2;
+
+    $(function($) {
         $('#target').Jcrop({
             minSize: [600, 600],
-            boxWidth: 500,
-            boxHeight: 500,
+            boxWidth: w,
+            boxHeight: w,
             aspectRatio: 1,
             trueSize: [<?=$width;?>, <?=$height;?>],
+            bgColor:   '#fffffa',
+            bgOpacity: .4,
             onSelect: showCoords,
             onChange: showCoords
         });

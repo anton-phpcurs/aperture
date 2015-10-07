@@ -79,13 +79,6 @@
 
 <script>
     $(document).ready(function() {
-        $(".galery-image").on('click', function(event){
-            var id = this.id;
-
-            $('#comment').text(id);
-            $('#modal').modal('toggle');
-        });
-
         $("#search").on("keyup", function(event){
             var text = $("#search").val();
             $.ajax({

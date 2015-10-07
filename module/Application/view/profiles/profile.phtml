@@ -10,21 +10,16 @@
                     <?php echo $profile_name; ?>
                 </span>
             </h1>
-            <a class="btn btn-success" href="/<?= $_SESSION['profile_name']?>/about">About <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-primary">Photos <span class="badge">0</span></button>
-                <button type="button" class="btn btn-primary">Following <span class="badge">0</span></button>
-                <button type="button" class="btn btn-primary">Followers <span class="badge">0</span></button>
+                <div class="btn disabled">Photos <span class="badge">0</span></div>
+                <div class="btn disabled">Following <span class="badge">0</span></div>
+                <div class="btn disabled">Followers <span class="badge">0</span></div>
             </div>
-            <a class="btn btn-success" href="/files/upload">Upload <span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
-        </div>
-    </div>
-</div>
-
-<div id="modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <p id="comment"></p>
+            <div>
+                <a class="btn btn-success" href="/<?= $_SESSION['profile_name']?>">Flow <span class="glyphicon glyphicon-picture" aria-hidden="true"></span></a>
+                <a class="btn btn-success" href="/<?= $_SESSION['profile_name']?>/about">About <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                <a class="btn btn-success" href="/files/upload">Upload <span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
+            </div>
         </div>
     </div>
 </div>
@@ -32,67 +27,16 @@
 <div class="row">
     <?php foreach($files as $file) : ?>
         <div class="col-md-4">
-            <div id="<?=$file['id']; ?>" class="thumbnail galery-image">
-                <img src="<?=$file['path']; ?>" alt="...">
+            <div  class="thumbnail">
+            <a href="/files/view/<?= $file['name']; ?>">
+                <img src="<?=$file['folder']. $file['name']. $file['ext']; ?>">
+            </a>
+            <div class="btn-group" role="group" aria-label="...">
+                <div class="btn disabled"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $file['likes']; ?></div>
+                <div class="btn disabled"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <?= $file['comments']; ?></div>
+                <div class="btn disabled"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?= $file['views']; ?></div>
+            </div>
             </div>
         </div>
     <?php endforeach ?>
 </div>
-
-
-
-<!--script>
-    $(document).ready(function() {
-        $(".galery-image").on('click', function(event){
-            var id = this.id;
-
-            $('#comment').text(id);
-            $('#modal').modal('toggle');
-        });
-
-
-        /*
-         $("#search").on("keyup", function(event){
-         var text = $("#search").val();
-         $.ajax({
-         url: '/accounts/search',
-         type: 'POST',
-         dataType: 'json',
-         async: true,
-         data: $("#search").serialize(),
-         success: function (data, status) {
-         var result = data['result'].valueOf();
-         $( "#search" ).autocomplete({
-         source: result,
-         minLength: 1,
-         select: function( event, ui ) {
-         console.log( ui.item ?
-         "Selected: " + ui.item.value + ", geonameId: " + ui.item.id :
-         "Nothing selected, input was " + this.value
-         );
-
-         location.href = '/'+ ui.item.value;
-         }
-         });
-         },
-         error : function(xhr, textStatus, errorThrown) {
-         if (xhr.status === 0) {
-         console.log('Not connected. Verify Network.');
-         } else if (xhr.status == 404) {
-         console.log('Requested page not found. [404]');
-         } else if (xhr.status == 500) {
-         console.log('Server Error [500].');
-         } else if (errorThrown === 'parsererror') {
-         console.log('Requested JSON parse failed.');
-         } else if (errorThrown === 'timeout') {
-         console.log('Time out error.');
-         } else if (errorThrown === 'abort') {
-         console.log('Ajax request aborted.');
-         } else {
-         console.log('Remote sever unavailable. Please try later');
-         }
-         }
-         });
-         })*/
-    });
-</script-->

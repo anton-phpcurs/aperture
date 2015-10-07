@@ -48,7 +48,6 @@ div.container a.brand {
 
 .container .jumbotron {
     background-color: #fff;
-    padding-right: 10px 10px;
 }
 
 hr{
@@ -61,3 +60,12 @@ hr{
 
 }
 .ui-autocomplete { position: absolute; cursor: default;z-index:3000 !important;}
+
+.container .jumbotron {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.container .jumbotron h1{
+    margin-top: 0px;
+}

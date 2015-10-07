@@ -61,7 +61,6 @@ class UploadForm extends Form
     {
         $file = new InputFilter\Input('file');
         $file->getValidatorChain()
-                //->attach(new Validator\File\MimeType(('image', 'audio')))
                 ->attach(new Validator\File\Size(array('max' => 3100000)))
                 ->attach(new Validator\File\ImageSize(array(
                     'minWidth' => 600, 'minHeight' => 600,
@@ -76,45 +75,5 @@ class UploadForm extends Form
         $inputFilters = new InputFilter\InputFilter();
         $inputFilters->add($file);
         $this->setInputFilter($inputFilters);
-
-        //Mime type: https://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_MIME-%D1%82%D0%B8%D0%BF%D0%BE%D0%B2
-
-/*        $file = new InputFilter\Input('file');
-#        $file->getValidatorChain()->attachByName('filesize',      array('max' => 50480));
-#            ->attachByName('filesize',      array('max' => 50480))
-#            ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpeg,image/gif,image/tiff'))  //,video/mpeg, video/mp4'
-#            ->attachByName('fileimagesize', array('minWidth' => 600, 'minHeight' => 600));
-
-        $file->getValidatorChain()->attach(new Validator\FileInput(array(
-            'filesize' => array('max' => 50480)
-        )));
-
-        //-- Bind filters ---------------------------------
-        $inputFilters = new InputFilter\InputFilter();
-        $inputFilters->add($file);
-        $this->setInputFilter($inputFilters);
-
-*/
-/*        $iF = new InputFilter\InputFilter();
-
-        // File Input
-        $fileInput = new InputFilter\FileInput('file');
-        $fileInput->setRequired(true);
-
-        $fileInput->getValidatorChain()
-//            ->attachByName('filesize',      array('max' => 204800))
-            ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png'));
-//            ->attachByName('fileimagesize', array('maxWidth' => 100, 'maxHeight' => 100));
-/*
-        $fileInput->getFilterChain()->attachByName(
-            'filerenameupload',
-            array(
-                'target'    => './uploads/avatar.png',
-                'randomize' => true,
-            )
-        );
-*/
-       // $iF->add($fileInput);
-       // $this->setInputFilter($iF);
     }
 }

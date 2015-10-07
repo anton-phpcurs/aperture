@@ -79,7 +79,9 @@ class FilesTable
 
         if (isset($dataIn['id']))      {$dataOut['id']      = $dataIn['id'];}
         if (isset($dataIn['id_user'])) {$dataOut['id_user'] = $dataIn['id_user'];}
-        if (isset($dataIn['path']))    {$dataOut['path']    = $dataIn['path'];}
+        if (isset($dataIn['folder']))  {$dataOut['folder']  = $dataIn['folder'];}
+        if (isset($dataIn['name']))    {$dataOut['name']    = $dataIn['name'];}
+        if (isset($dataIn['ext']))     {$dataOut['ext']     = $dataIn['ext'];}
         if (isset($dataIn['likes']))   {$dataOut['likes']   = $dataIn['likes'];}
 
         return $dataOut;

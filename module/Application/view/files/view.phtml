@@ -1,0 +1,23 @@
+<section>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default" >
+                <div class="panel-body" >
+                    <div class="thumbnail">
+                        <img src="<?= $file['folder'] . $file['name'] . $file['ext'];?>">
+                    </div>
+                    <nav class="navbar navbar-inverse">
+                        <ul class="nav navbar-nav">
+                            <li ><a href=""><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $file['likes']; ?></a></li>
+                            <li ><a href=""><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <?= $file['comments']; ?></a></li>
+                            <li ><a href=""><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?= $file['views']; ?></a></li>
+                        </ul>
+                        <form class="navbar-form nav navbar-left" role="search">
+                            <input type="text" class="form-control " placeholder="Enter comment" name="comment" id="search" autocomplete="off">
+                        </form>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
