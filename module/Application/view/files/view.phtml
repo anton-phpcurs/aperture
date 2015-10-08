@@ -6,18 +6,99 @@
                     <div class="thumbnail">
                         <img src="<?= $file['folder'] . $file['name'] . $file['ext'];?>">
                     </div>
-                    <nav class="navbar navbar-inverse">
-                        <ul class="nav navbar-nav">
-                            <li ><a href=""><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $file['likes']; ?></a></li>
-                            <li ><a href=""><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <?= $file['comments']; ?></a></li>
-                            <li ><a href=""><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <?= $file['views']; ?></a></li>
-                        </ul>
-                        <form class="navbar-form nav navbar-left" role="search">
-                            <input type="text" class="form-control " placeholder="Enter comment" name="comment" id="search" autocomplete="off">
-                        </form>
+                    <nav class="navbar navbar">
+                        <div class="nav ">
+                            <div class="btn-group pull-right" role="group" aria-label="...">
+                                <?php if ($prev) {?>
+                                    <a class="btn" href="<?= '/files/view/'.$prev['name']; ?>"> <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Prev </a>
+                                <?php } else {?>
+                                    <a class="btn disabled" href=""> <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Prev </a>
+                                <?php } ?>
+
+                                <a class="btn" href="<?= '/'.$_SESSION['profile_name']; ?> "> <span class="glyphicon glyphicon-th" aria-hidden="true"></span> All </a>
+
+                                <?php if ($next) {?>
+                                    <a class="btn" href="<?= '/files/view/'.$next['name']; ?>"> Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+                                <?php } else {?>
+                                    <a class="btn disabled" href=""> Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+                                <?php } ?>
+                            </div>
+
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a class="btn" href=""><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $likesCount; ?> </a>
+                                <a class="btn" href=""><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <span id="count-comments"><?= $commentsCount; ?></span></a>
+                            </div>
+
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <form onsubmit="return false" role="comments" id="comment-form" method="post">
+                                        <input type="text" class="form-control " placeholder="Enter comment" name="comment" id="text" autocomplete="off">
+                                        <input type="hidden" name="file_name" value="<?=$file['name']?>">
+                                    </form>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group" id="connemt-list">
+                                        <?php foreach($comments as $comment) : ?>
+                                            <li class="list-group-item"><b><a href="/<?=$comment['profile_name']?>"><?=$comment['profile_name']?></a></b>: <?=$comment['text']?></li>
+                                        <?php endforeach ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </nav>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
+<script>
+    $(document).ready(function() {
+        $("#text").on("keyup", function(event){
+            if(event.keyCode == 13){
+                $.ajax({
+                    url: 'http://test-c.loc/files/comment',
+                    type: 'POST',
+                    data: $("#comment-form").serialize(),
+                    success: function (data, status) {
+                        var result = data['result'].valueOf();
+                        console.log(result[0].profile_name);
+                        var text = "";
+                        for (var index = 0; index < result.length; index++){
+                            console.log(result[index].profile_name);
+                            text = text + "<li class='list-group-item'><b><a href='/";
+                            text = text + result[index].profile_name;
+                            text = text + "'>";
+                            text = text + result[index].profile_name;
+                            text = text + "</a></b>: "
+                            text = text + result[index].text;
+                            text = text + "</li>";
+                        }
+                        $("#text").val("");
+                        $("#count-comments").text(result.length);
+                        $("#connemt-list").html(text);
+                    },
+                    error : function(xhr, textStatus, errorThrown) {
+                        if (xhr.status === 0) {
+                            console.log('Not connected. Verify Network.');
+                        } else if (xhr.status == 404) {
+                            console.log('Requested page not found. [404]');
+                        } else if (xhr.status == 500) {
+                            console.log('Server Error [500].');
+                        } else if (errorThrown === 'parsererror') {
+                            console.log('Requested JSON parse failed.');
+                        } else if (errorThrown === 'timeout') {
+                            console.log('Time out error.');
+                        } else if (errorThrown === 'abort') {
+                            console.log('Ajax request aborted.');
+                        } else {
+                            console.log('Remote sever unavailable. Please try later.' + xhr);
+                        }
+                    }
+                });
+            }
+        })
+    });
+</script>

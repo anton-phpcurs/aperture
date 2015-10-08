@@ -9,7 +9,9 @@
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Validator\File\Count;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 
 use Application\Form\UploadForm;
 
@@ -108,11 +110,60 @@ class FilesController extends AbstractActionController
         $file_name = $this->params()->fromRoute('id');
         $file = $this->getFilesTable()->getOneBy(array('name' => $file_name));
 
+        $fileNext = $this->getFilesTable()->getNext(array('id_user' => $file['id_user'], new \Zend\Db\Sql\Predicate\Operator('id', '>', $file['id'])));
+        $filePrev = $this->getFilesTable()->getPrev(array('id_user' => $file['id_user'], new \Zend\Db\Sql\Predicate\Operator('id', '<', $file['id'])));
+
+        $comments = $this->getCommentsTable()->getComments(array('file_name' => $file['name']));
+        $commentsCount = count($comments);
+        $likes = $file['likes'];
+/*
+        $file = $this->getFilesTable()->getOneBy(array('name' => $file['name']));
+        $cc['id'] = $file['id'];
+        $cc['comments'] = $commentsCount;
+        $this->getFilesTable()->save($cc);
+*/
         $model = new ViewModel(array(
-            'file' => $file
+            'file' => $file,
+            'next' => $fileNext,
+            'prev' => $filePrev,
+            'comments' => $comments,
+            'likesCount' => $likes,
+            'commentsCount' => $commentsCount
         ));
         $model->setTemplate('files/view');
         return $model;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function commentAction()
+    {
+        $commentText = $this->request->getPost('comment');
+        $fileName = $this->request->getPost('file_name');
+
+        $post['file_name'] = $fileName;
+        $post['profile_name'] = $_SESSION['profile_name'];
+        $post['text'] = $commentText;
+        $post['date'] = date("Y-m-d");
+
+        $this->getCommentsTable()->save($post);
+
+        $file = $this->getFilesTable()->getOneBy(array('name' => $fileName));
+        $cc['id'] = $file['id'];
+        $cc['comments'] = $this->getCommentsTable()->getManyBy(array('file_name' => $fileName))->count();//$commentsCount;
+        $this->getFilesTable()->save($cc);
+
+        $comments = $this->getCommentsTable()->getComments(array('file_name' => $post['file_name']));
+
+        foreach($comments as $comment) {
+            $result[] = $comment;
+        }
+
+        $view = new JsonModel(array(
+            'result' => $result,
+            'success'=>true,
+        ));
+
+        return $view;
     }
 
 
@@ -176,6 +227,12 @@ class FilesController extends AbstractActionController
     public function getFilesTable()
     {
         return $this->getServiceLocator()->get('FilesTable');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function getCommentsTable()
+    {
+        return $this->getServiceLocator()->get('CommentsTable');
     }
 
     //------------------------------------------------------------------------------------------------------------------

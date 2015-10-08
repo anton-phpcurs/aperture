@@ -11,7 +11,7 @@ namespace Application\Model;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Sql;
 
-class FilesTable
+class CommentsTable
 {
     protected $tableGateway;
 
@@ -40,48 +40,13 @@ class FilesTable
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    public function getNext($where = null)
+    public function getComments($where = null)
     {
         $sql = new Sql($this->tableGateway->adapter);
-
         $select = $sql->select();
-        $select->from('files');
-        $select->where($where);
-        $select->order('id');
-        $select->limit(1);
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-
-        return $results->current();
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    public function getPrev($where = null)
-    {
-        $sql = new Sql($this->tableGateway->adapter);
-
-        $select = $sql->select();
-        $select->from('files');
+        $select->from('comments');
         $select->where($where);
         $select->order('id DESC');
-        $select->limit(1);
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-
-        return $results->current();
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    public function getNews()
-    {
-        $sql = new Sql($this->tableGateway->adapter);
-
-        $select = $sql->select();
-        $select->from('files');
-        $select->order('id DESC');
-        $select->limit(10);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
@@ -93,7 +58,6 @@ class FilesTable
     public function save($data)
     {
         $data = $this->exchangeArray($data);
-
         $id = (isset($data['id'])) ? (int) $data['id'] : 0;
 
         if ($id == 0) {
@@ -112,13 +76,11 @@ class FilesTable
     {
         $dataOut = [];
 
-        if (isset($dataIn['id']))       {$dataOut['id']      = $dataIn['id'];}
-        if (isset($dataIn['id_user']))  {$dataOut['id_user'] = $dataIn['id_user'];}
-        if (isset($dataIn['folder']))   {$dataOut['folder']  = $dataIn['folder'];}
-        if (isset($dataIn['name']))     {$dataOut['name']    = $dataIn['name'];}
-        if (isset($dataIn['ext']))      {$dataOut['ext']     = $dataIn['ext'];}
-        if (isset($dataIn['likes']))    {$dataOut['likes']   = $dataIn['likes'];}
-        if (isset($dataIn['comments'])) {$dataOut['comments']= $dataIn['comments'];}
+        if (isset($dataIn['id']))           {$dataOut['id']             = $dataIn['id'];}
+        if (isset($dataIn['file_name']))    {$dataOut['file_name']      = $dataIn['file_name'];}
+        if (isset($dataIn['profile_name'])) {$dataOut['profile_name']   = $dataIn['profile_name'];}
+        if (isset($dataIn['text']))         {$dataOut['text']           = $dataIn['text'];}
+        if (isset($dataIn['date']))        {$dataOut['date']           = $dataIn['date'];}
 
         return $dataOut;
     }

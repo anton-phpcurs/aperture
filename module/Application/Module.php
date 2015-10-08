@@ -53,10 +53,15 @@ class Module
                     $tableGateway = new TableGateway('users', $dbAdapter);
                     return new Model\UsersTable($tableGateway);
                 },
-                'filesTable' =>  function($sm) {
+                'FilesTable' =>  function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $tableGateway = new TableGateway('files', $dbAdapter);
                     return new Model\FilesTable($tableGateway);
+                },
+                'CommentsTable' =>  function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $tableGateway = new TableGateway('comments', $dbAdapter);
+                    return new Model\CommentsTable($tableGateway);
                 },
             ),
         );
