@@ -63,6 +63,11 @@ class Module
                     $tableGateway = new TableGateway('comments', $dbAdapter);
                     return new Model\CommentsTable($tableGateway);
                 },
+                'FollowsTable' =>  function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $tableGateway = new TableGateway('follows', $dbAdapter);
+                    return new Model\FollowsTable($tableGateway);
+                },
             ),
         );
     }

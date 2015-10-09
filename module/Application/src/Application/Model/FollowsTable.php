@@ -11,7 +11,7 @@ namespace Application\Model;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Sql;
 
-class UsersTable
+class FollowsTable
 {
     protected $tableGateway;
 
@@ -40,27 +40,6 @@ class UsersTable
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    public function search($profile_name)
-    {
-        $sql = new Sql($this->tableGateway->adapter);
-        $where = new \Zend\Db\Sql\Where();
-
-        $select = $sql->select();
-        $select->from('users');
-
-        $where->like('profile_name', '%'.$profile_name.'%');
-        $select->where($where);
-
-        $select->order('profile_name');
-        $select->limit(15);
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-
-        return $results;
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
     public function save($data)
     {
         $data = $this->exchangeArray($data);
@@ -76,26 +55,21 @@ class UsersTable
         }
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    public function delete($where = null)
+    {
+        return $this->tableGateway->delete($where);
+    }
+
     // Helper function =================================================================================================
     //------------------------------------------------------------------------------------------------------------------
     public function exchangeArray($dataIn)
     {
         $dataOut = [];
 
-        if (isset($dataIn['id']))              {$dataOut['id']              = $dataIn['id'];}
-        if (isset($dataIn['profile_name']))    {$dataOut['profile_name']    = $dataIn['profile_name'];}
-        if (isset($dataIn['email']))           {$dataOut['email']           = $dataIn['email'];}
-        if (isset($dataIn['password']))        {$dataOut['password']        = $dataIn['password'];}
-        if (isset($dataIn['full_name']))       {$dataOut['full_name']       = $dataIn['full_name'];}
-        if (isset($dataIn['bio']))             {$dataOut['bio']             = $dataIn['bio'];}
-        if (isset($dataIn['link_vk']))         {$dataOut['link_vk']         = $dataIn['link_vk'];}
-        if (isset($dataIn['link_fb']))         {$dataOut['link_fb']         = $dataIn['link_fb'];}
-        if (isset($dataIn['link_tw']))         {$dataOut['link_tw']         = $dataIn['link_tw'];}
-        if (isset($dataIn['link_skype']))      {$dataOut['link_skype']      = $dataIn['link_skype'];}
-        if (isset($dataIn['link_site']))       {$dataOut['link_site']       = $dataIn['link_site'];}
-        if (isset($dataIn['count_photos']))    {$dataOut['count_photos']    = $dataIn['count_photos'];}
-        if (isset($dataIn['count_following'])) {$dataOut['count_following'] = $dataIn['count_following'];}
-        if (isset($dataIn['count_followers'])) {$dataOut['count_followers'] = $dataIn['count_followers'];}
+        if (isset($dataIn['id']))           {$dataOut['id']           = $dataIn['id'];}
+        if (isset($dataIn['id_user']))      {$dataOut['id_user']      = $dataIn['id_user'];}
+        if (isset($dataIn['id_follower'])) {$dataOut['id_follower'] = $dataIn['id_follower'];}
 
         return $dataOut;
     }

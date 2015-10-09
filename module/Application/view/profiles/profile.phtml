@@ -7,18 +7,24 @@
         <div class="col-md-8 col-md-offset-0">
             <h1>
                 <span class="zf-green">
-                    <?php echo $profile_name; ?>
+                    <?= $profile['profile_name']; ?>
                 </span>
             </h1>
             <div class="btn-group" role="group" aria-label="...">
-                <div class="btn disabled">Photos <span class="badge">0</span></div>
-                <div class="btn disabled">Following <span class="badge">0</span></div>
-                <div class="btn disabled">Followers <span class="badge">0</span></div>
+                <div class="btn disabled">Photos <span class="badge"><?= $profile['count_photos']; ?></span></div>
+                <div class="btn disabled">Following <span class="badge"><?= $profile['count_following']; ?></span></div>
+                <div class="btn disabled">Followers <span class="badge"><?= $profile['count_followers']; ?></span></div>
             </div>
             <div>
-                <a class="btn btn-success" href="/<?= $_SESSION['profile_name']?>">Flow <span class="glyphicon glyphicon-picture" aria-hidden="true"></span></a>
-                <a class="btn btn-success" href="/<?= $_SESSION['profile_name']?>/about">About <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
-                <a class="btn btn-success" href="/files/upload">Upload <span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
+                <a class="btn btn-success" href="/<?= $profile['profile_name']; ?>">Flow <span class="glyphicon glyphicon-picture" aria-hidden="true"></span></a>
+                <a class="btn btn-success" href="/<?= $profile['profile_name']; ?>/about">About <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                <?php if ($buttonType == 1) { ?>
+                    <a class="btn btn-success" href="/files/upload">Upload <span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
+                <?php } elseif ($buttonType == 2) { ?>
+                    <a class="btn btn-primary" href="/<?= $profile['profile_name']; ?>/follow">Follow <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                <?php } else { ?>
+                    <a class="btn btn-warning" href="/<?= $profile['profile_name']; ?>/unfollow">Unfollow <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span></a>
+                <?php }?>
             </div>
         </div>
     </div>
@@ -34,6 +40,7 @@
             <div class="btn-group" role="group" aria-label="...">
                 <div class="btn disabled"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $file['likes']; ?></div>
                 <div class="btn disabled"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <?= $file['comments']; ?></div>
+                <div class="btn disabled"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <span id="count-comments"><?= $file['views'];  ?></span></div>
             </div>
             </div>
         </div>

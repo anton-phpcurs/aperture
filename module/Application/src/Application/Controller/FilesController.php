@@ -116,17 +116,19 @@ class FilesController extends AbstractActionController
         $comments = $this->getCommentsTable()->getComments(array('file_name' => $file['name']));
         $commentsCount = count($comments);
         $likes = $file['likes'];
-/*
+
         $file = $this->getFilesTable()->getOneBy(array('name' => $file['name']));
         $cc['id'] = $file['id'];
         $cc['comments'] = $commentsCount;
+        $cc['views'] = $file['views'] + 1;
         $this->getFilesTable()->save($cc);
-*/
+
         $model = new ViewModel(array(
             'file' => $file,
             'next' => $fileNext,
             'prev' => $filePrev,
             'comments' => $comments,
+            'viewsCount' => $file['views'] + 1,
             'likesCount' => $likes,
             'commentsCount' => $commentsCount
         ));
@@ -211,6 +213,11 @@ class FilesController extends AbstractActionController
         $post['ext'] = $_POST['ext'];
 
         $this->getFilesTable()->save($post);
+
+        $files = $this->getFilesTable()->getManyBy(array('id_user' => $_SESSION['id']));
+        $filesCount['id'] = $_SESSION['id'];
+        $filesCount['count_photos'] = count($files);
+        $this->getUsersTable()->save($filesCount);
 
         return $this->redirect()->toUrl('/'. $_SESSION['profile_name']);
     }

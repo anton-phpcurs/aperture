@@ -119,6 +119,7 @@ class FilesTable
         if (isset($dataIn['ext']))      {$dataOut['ext']     = $dataIn['ext'];}
         if (isset($dataIn['likes']))    {$dataOut['likes']   = $dataIn['likes'];}
         if (isset($dataIn['comments'])) {$dataOut['comments']= $dataIn['comments'];}
+        if (isset($dataIn['views']))    {$dataOut['views']   = $dataIn['views'];}
 
         return $dataOut;
     }
