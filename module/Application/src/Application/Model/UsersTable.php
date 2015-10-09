@@ -83,6 +83,8 @@ class UsersTable
         $dataOut = [];
 
         if (isset($dataIn['id']))              {$dataOut['id']              = $dataIn['id'];}
+        if (isset($dataIn['is_active']))       {$dataOut['is_active']       = $dataIn['is_active'];}
+        if (isset($dataIn['activation']))      {$dataOut['activation']      = $dataIn['activation'];}
         if (isset($dataIn['profile_name']))    {$dataOut['profile_name']    = $dataIn['profile_name'];}
         if (isset($dataIn['email']))           {$dataOut['email']           = $dataIn['email'];}
         if (isset($dataIn['password']))        {$dataOut['password']        = $dataIn['password'];}

@@ -19,6 +19,12 @@ use Application\Form\EmailForm;
 use Application\Form\PasswordForm;
 use Application\Form\OtherForm;
 
+use Zend\Mail\Message;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mail\Transport\Smtp;
+use Zend\Mail\Transport\SmtpOptions;
+use Zend\Mime\Part;
+
 class AccountsController extends AbstractActionController
 {
     //------------------------------------------------------------------------------------------------------------------
@@ -121,10 +127,17 @@ class AccountsController extends AbstractActionController
             return $model;
         }
 
+        $key = md5(microtime());
+
         $profile = $formRegistration->getData();
         $profile['password'] = md5($profile['password']);
+        $profile['is_active'] = 0;
+        $profile['activation'] = $key;
 
         $this->getUsersTable()->save($profile);
+
+        $this->sendMail($email, $key);
+
         $profile = $this->getUsersTable()->getOneBy(array('profile_name' => $profile['profile_name']));
 
         $_SESSION['id']             = $profile['id'];
@@ -365,5 +378,40 @@ class AccountsController extends AbstractActionController
     public function getUsersTable()
     {
         return $this->getServiceLocator()->get('UsersTable');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    protected function sendMail($email, $activation_key)
+    {
+        $mailText = 'Для подтверждения регистрации войди те на сайт и ввдете это код: ' . $activation_key;
+
+        $mimePart = new Part($mailText);
+        $mimePart->type = \Zend\Mime\Mime::TYPE_HTML;
+        $mimePart->charset = 'utf-8';
+        $body = new MimeMessage();
+        $body->setParts([$mimePart]);
+
+        $message = new Message();
+        $message->setEncoding('UTF-8');
+        $message->setSubject('Aperture: activation key');
+        $message->addTo($email);
+        $message->addFrom('admin@abrosimov-lx.nixsolutions.com', 'Test');
+        $message->setBody($body);
+
+        $options = new SmtpOptions();
+        $options->setHost('10.10.0.114');
+        $options->setPort('2525');
+        $transport = new Smtp($options);
+
+        $headers = array(
+            //'EXTERNAL' => 1,
+            'PROJECT' => 'Aperture',
+            'EMAILS' => 'a.abrosimov@nixsolutions.com'
+        );
+        foreach ($headers as $key => $value) {
+            $message->getHeaders()->addHeaderLine($key, $value);
+        }
+
+        $transport->send($message);
     }
 }
