@@ -62,6 +62,43 @@ class ProfilesController extends AbstractActionController
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    public function aboutAction()
+    {
+        if (!isset($_SESSION['profile_name'])) {
+            $this->redirect()->toUrl('/accounts/login');
+        }
+
+        $profile_name = $this->params()->fromRoute('profile_name');
+        $profile = $this->getUsersTable()->getOneBy(array('profile_name' => $profile_name));
+
+        if (!$profile) {
+            $this->getResponse()->setStatusCode(404);
+            return false;
+        }
+
+        if ($_SESSION['profile_name'] == $profile_name) {
+            $buttonType = 1;
+        } else {
+            $follow =$this->getFollowsTable()->getOneBy(array(
+                'id_user' => $profile['id'],
+                'id_follower' => $_SESSION['id'],
+            ));
+            if ($follow) {
+                $buttonType = 3;
+            } else {
+                $buttonType = 2;
+            }
+        }
+
+        $view = new ViewModel(array(
+            'profile' => $profile,
+            'buttonType' => $buttonType
+        ));
+        $view->setTemplate('profiles/about');
+        return $view;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
     public function followAction()
     {
         $profile_name = $this->params()->fromRoute('profile_name');

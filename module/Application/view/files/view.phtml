@@ -2,10 +2,27 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default" >
+                <div class="panel-heading">
+                    <a href="/<?=$profile['profile_name']?>"><b><?=$profile['full_name']?></b></a>
+                    <div class="pull-right">
+                        <?php if ($profile['profile_name'] != $_SESSION['profile_name']) {?>
+                            <?php if (!$buttonLike) {?>
+                                <a class="btn btn-success btn-xs" href="/files/like/<?=$file['name']?>"> Like <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> </a>
+                            <?php } else {?>
+                                <a class="btn btn-default btn-xs" href="/files/dislike/<?=$file['name']?>"> Dislike <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> </a>
+                            <?php }?>
+                            <a class="btn btn-warning btn-xs" href=""> Create avatar <span class="glyphicon glyphicon-camera" aria-hidden="true"></span> </a>
+                        <?php } else {?>
+                            <a class="btn btn-warning btn-xs" href=""> Create avatar <span class="glyphicon glyphicon-camera" aria-hidden="true"></span> </a>
+                            <a class="btn btn-danger btn-xs" href="/files/delete/<?=$file['name']?>"> Delete <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> </a>
+                        <?php }?>
+                    </div>
+                </div>
                 <div class="panel-body" >
                     <div class="thumbnail">
                         <img src="<?= $file['folder'] . $file['name'] . $file['ext'];?>">
                     </div>
+
                     <nav class="navbar navbar">
                         <div class="nav ">
                             <div class="btn-group pull-right" role="group" aria-label="...">
@@ -30,7 +47,6 @@
                                 <a class="btn disabled" href=""><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <span id="count-comments"><?= $viewsCount; ?></span></a>
                             </div>
 
-
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <form onsubmit="return false" role="comments" id="comment-form" method="post">
@@ -38,6 +54,7 @@
                                         <input type="hidden" name="file_name" value="<?=$file['name']?>">
                                     </form>
                                 </div>
+
                                 <div class="panel-body">
                                     <ul class="list-group" id="connemt-list">
                                         <?php foreach($comments as $comment) : ?>
@@ -53,7 +70,6 @@
         </div>
     </div>
 </section>
-
 
 <script>
     $(document).ready(function() {

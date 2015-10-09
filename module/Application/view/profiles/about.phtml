@@ -30,19 +30,32 @@
     </div>
 </div>
 
-<div class="row">
-    <?php foreach($files as $file) : ?>
-        <div class="col-md-4">
-            <div  class="thumbnail">
-            <a href="/files/view/<?= $file['name']; ?>">
-                <img src="<?=$file['folder']. $file['name']. $file['ext']; ?>">
-            </a>
-            <div class="btn-group" role="group" aria-label="...">
-                <div class="btn disabled"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $file['likes']; ?></div>
-                <div class="btn disabled"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <?= $file['comments']; ?></div>
-                <div class="btn disabled"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <span id="count-comments"><?= $file['views'];  ?></span></div>
-            </div>
-            </div>
-        </div>
-    <?php endforeach ?>
+<div class="jumbotron" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+    <p><?= $profile['bio']; ?></p>
+
+    <?php if($profile['link_site'] != '') : ?>
+        <a class="btn btn-default" href="<?= $profile['link_site']; ?>">My site <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    <?php endif ?>
+
+    <?php if($profile['link_vk'] != '') : ?>
+        <a class="btn btn-default" href="<?= $profile['link_vk']; ?>">Vkontakte <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    <?php endif ?>
+
+    <?php if($profile['link_fb'] != '') : ?>
+        <a class="btn btn-default" href="<?= $profile['link_fb']; ?>">Facebook <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    <?php endif ?>
+
+    <?php if($profile['link_tw'] != '') : ?>
+        <a class="btn btn-default" href="<?= $profile['link_tw']; ?>">Twitter <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    <?php endif ?>
+
+    <?php if($profile['link_skype'] != '') : ?>
+       <a class="btn btn-default" href="skype:<?= $profile['link_skype']; ?>">Skype <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+    <?php endif ?>
+
+    <hr>
+        Following list
+    <hr>
+        Followers list
 </div>

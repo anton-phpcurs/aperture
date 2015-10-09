@@ -11,7 +11,7 @@ namespace Application\Model;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Sql;
 
-class CommentsTable
+class LikesTable
 {
     protected $tableGateway;
 
@@ -37,21 +37,6 @@ class CommentsTable
     public function getOneBy($where = null)
     {
         return $this->tableGateway->select($where)->current();
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    public function getComments($where = null)
-    {
-        $sql = new Sql($this->tableGateway->adapter);
-        $select = $sql->select();
-        $select->from('comments');
-        $select->where($where);
-        $select->order('id DESC');
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-
-        return $results;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -82,11 +67,9 @@ class CommentsTable
     {
         $dataOut = [];
 
-        if (isset($dataIn['id']))           {$dataOut['id']             = $dataIn['id'];}
-        if (isset($dataIn['file_name']))    {$dataOut['file_name']      = $dataIn['file_name'];}
-        if (isset($dataIn['profile_name'])) {$dataOut['profile_name']   = $dataIn['profile_name'];}
-        if (isset($dataIn['text']))         {$dataOut['text']           = $dataIn['text'];}
-        if (isset($dataIn['date']))        {$dataOut['date']           = $dataIn['date'];}
+        if (isset($dataIn['id']))           {$dataOut['id']           = $dataIn['id'];}
+        if (isset($dataIn['file_name']))    {$dataOut['file_name']    = $dataIn['file_name'];}
+        if (isset($dataIn['profile_name'])) {$dataOut['profile_name'] = $dataIn['profile_name'];}
 
         return $dataOut;
     }

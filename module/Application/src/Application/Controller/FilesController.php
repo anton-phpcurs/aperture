@@ -103,7 +103,6 @@ class FilesController extends AbstractActionController
         return $model;
     }
 
-
     //------------------------------------------------------------------------------------------------------------------
     public function viewAction()
     {
@@ -117,20 +116,31 @@ class FilesController extends AbstractActionController
         $commentsCount = count($comments);
         $likes = $file['likes'];
 
-        $file = $this->getFilesTable()->getOneBy(array('name' => $file['name']));
         $cc['id'] = $file['id'];
         $cc['comments'] = $commentsCount;
         $cc['views'] = $file['views'] + 1;
         $this->getFilesTable()->save($cc);
 
+        $buttonLike = false;
+        $post['file_name'] = $file_name;
+        $post['profile_name'] = $_SESSION['profile_name'];
+
+        if ($this->getLikesTable()->getOneBy($post)) {
+            $buttonLike = true;
+        }
+
+        $profile = $this->getUsersTable()->getOneBy(array('id' => $file['id_user']));
+
         $model = new ViewModel(array(
+            'profile' => $profile,
             'file' => $file,
             'next' => $fileNext,
             'prev' => $filePrev,
             'comments' => $comments,
             'viewsCount' => $file['views'] + 1,
             'likesCount' => $likes,
-            'commentsCount' => $commentsCount
+            'commentsCount' => $commentsCount,
+            'buttonLike' => $buttonLike
         ));
         $model->setTemplate('files/view');
         return $model;
@@ -167,7 +177,6 @@ class FilesController extends AbstractActionController
 
         return $view;
     }
-
 
     //------------------------------------------------------------------------------------------------------------------
     public function saveAction()
@@ -222,6 +231,68 @@ class FilesController extends AbstractActionController
         return $this->redirect()->toUrl('/'. $_SESSION['profile_name']);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    public function likeAction()
+    {
+        $file_name = $this->params()->fromRoute('id');
+        $file = $this->getFilesTable()->getOneBy(array('name' => $file_name));
+
+        $post['file_name'] = $file_name;
+        $post['profile_name'] = $_SESSION['profile_name'];
+
+        if ($this->getLikesTable()->getOneBy($post)) {
+            $this->redirect()->toUrl('/files/'. $file_name);
+        }
+
+        $this->getLikesTable()->save($post);
+
+        $likes = $this->getLikesTable()->getManyBy(array('file_name' => $file_name));
+        $likesCount['id'] = $file['id'];
+        $likesCount['likes'] = count($likes);
+
+        $this->getFilesTable()->save($likesCount);
+
+        $this->redirect()->toUrl('/files/view/'. $file_name);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function dislikeAction()
+    {
+        $file_name = $this->params()->fromRoute('id');
+        $file = $this->getFilesTable()->getOneBy(array('name' => $file_name));
+
+        $post['file_name'] = $file_name;
+        $post['profile_name'] = $_SESSION['profile_name'];
+
+        if ($this->getLikesTable()->getOneBy($post)) {
+            $this->redirect()->toUrl('/files/'. $file_name);
+        }
+
+        $this->getLikesTable()->delete($post);
+
+        $likes = $this->getLikesTable()->getManyBy(array('file_name' => $file_name));
+        $likesCount['id'] = $file['id'];
+        $likesCount['likes'] = count($likes);
+
+        $this->getFilesTable()->save($likesCount);
+
+        $this->redirect()->toUrl('/files/view/'. $file_name);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function deleteAction()
+    {
+        $fileName = $this->params()->fromRoute('id');
+        $this->getFilesTable()->delete(array('name' => $fileName));
+        $this->getCommentsTable()->delete(array('file_name' => $fileName));
+
+        $files = $this->getFilesTable()->getManyBy(array('id_user' => $_SESSION['id']));
+        $filesCount['id'] = $_SESSION['id'];
+        $filesCount['count_photos'] = count($files);
+        $this->getUsersTable()->save($filesCount);
+
+        return $this->redirect()->toUrl('/'. $_SESSION['profile_name']);
+    }
 
     // Helper function =================================================================================================
     //------------------------------------------------------------------------------------------------------------------
@@ -241,6 +312,13 @@ class FilesController extends AbstractActionController
     {
         return $this->getServiceLocator()->get('CommentsTable');
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function getLikesTable()
+    {
+        return $this->getServiceLocator()->get('LikesTable');
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
     function imageCreateFromAny($filepath) {
