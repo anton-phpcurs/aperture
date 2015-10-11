@@ -140,7 +140,11 @@ class FilesController extends AbstractActionController
             'viewsCount' => $file['views'] + 1,
             'likesCount' => $likes,
             'commentsCount' => $commentsCount,
-            'buttonLike' => $buttonLike
+            'buttonLike' => $buttonLike,
+            'folder' => $file['folder'],
+            'name' => $file['name'],
+            'ext' => $file['ext'],
+
         ));
         $model->setTemplate('files/view');
         return $model;
@@ -181,8 +185,14 @@ class FilesController extends AbstractActionController
     //------------------------------------------------------------------------------------------------------------------
     public function saveAction()
     {
-        $target_w = 600;
-        $target_h = 600;
+        if (isset($_POST['avatar'])) {
+            $target_w = 150;
+            $target_h = 150;
+        } else {
+            $target_w = 600;
+            $target_h = 600;
+        }
+
         $jpeg_quality = 95;
 
         $src = APP_DIR . '/public' . $_POST['folder'] . $_POST['name'] . $_POST['ext'];
@@ -204,7 +214,13 @@ class FilesController extends AbstractActionController
 
             imagealphablending($dst_r,false);
             imagesavealpha($dst_r, true);
-            imagepng($dst_r, $src, 1);
+
+            if(isset($_POST['avatar'])) {
+                $avatarPath = APP_DIR . '/public' . $_POST['folder'].'avatar'.$_POST['ext'];
+                imagepng($dst_r, $avatarPath, 1);
+            } else {
+                imagepng($dst_r, $src, 1);
+            }
         } else {
             $dst_r = ImageCreateTrueColor($target_w, $target_h);
             imagecolorallocate($dst_r, 255, 255, 255);
@@ -213,7 +229,19 @@ class FilesController extends AbstractActionController
 
 #           header('Content-type: image/jpeg');
 #           imagejpeg($dst_r);
-            imagejpeg($dst_r, $src, $jpeg_quality);
+            if(isset($_POST['avatar'])) {
+                $avatarPath = APP_DIR . '/public' . $_POST['folder'].'avatar'.$_POST['ext'];
+                imagejpeg($dst_r, $avatarPath, $jpeg_quality);
+            } else {
+                imagejpeg($dst_r, $src, $jpeg_quality);
+            }
+        }
+
+        if (isset($_POST['avatar'])) {
+            $profile['id'] = $_SESSION['id'];
+            $profile['avatar_path'] = $_POST['folder'].'avatar'.$_POST['ext'];
+            $this->getUsersTable()->save($profile);
+            return $this->redirect()->toUrl('/'. $_SESSION['profile_name']);
         }
 
         $post['id_user'] = $_SESSION['id'];

@@ -1,7 +1,11 @@
 <div class="jumbotron" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="col-md-2 col-md-offset-0">
-            <img src="/img/avatar.png" alt="..." class="img-circle avatar-edit center-block">
+            <?php if ($profile['avatar_path'] == '') {?>
+                <img src="/img/avatar.png" alt="..." class="img-circle avatar-edit center-block">
+            <?php } else {?>
+                <img src="<?=$profile['avatar_path']?>" alt="..." class="img-circle avatar-edit center-block">
+            <?php }?>
         </div>
 
         <div class="col-md-8 col-md-offset-0">

@@ -82,7 +82,7 @@
         $("#search").on("keyup", function(event){
             var text = $("#search").val();
             $.ajax({
-                url: 'http://test-c.loc/accounts/search',
+                url: '/accounts/search',
                 type: 'POST',
                 dataType: 'json',
                 async: true,
