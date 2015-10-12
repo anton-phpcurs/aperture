@@ -5,22 +5,40 @@
                 <div class="panel-heading">
                     <a href="/<?=$profile['profile_name']?>"><b><?=$profile['full_name']?></b></a>
                     <div class="pull-right">
-                        <?php if ($profile['profile_name'] != $_SESSION['profile_name']) {?>
-                            <?php if (!$buttonLike) {?>
-                                <a class="btn btn-success btn-xs" href="/files/like/<?=$file['name']?>"> Like <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> </a>
+                        <form class="coords" method="post" action="/files/save">
+                            <input type="hidden" id="x" name="x">
+                            <input type="hidden" id="y" name="y">
+                            <input type="hidden" id="w" name="w">
+                            <input type="hidden" id="h" name="h">
+                            <input type="hidden" id="folder" name="folder" value="<?=$folder; ?>">
+                            <input type="hidden" id="name" name="name" value="<?=$name; ?>">
+                            <input type="hidden" id="ext" name="ext" value="<?=$ext; ?>">
+                            <input type="hidden" id="avatar" name="avatar" value="true">
+                            <!--button id="save" class="btn btn-warning btn-xs" style="display: none;">Save</button-->
+                            <input id="save" type="submit" name="submit" value="Save" style="display: none; class="btn btn-warning btn-xs">
+                            <button id="unhook" class="btn btn-danger btn-xs" style="display: none;">Cancel</button>
+                            <button id="rehook" class="btn btn-warning btn-xs" style="display: inline-block;"> Create avatar <span class="glyphicon glyphicon-camera" aria-hidden="true"></span> </button>
+
+                            <?php if ($profile['profile_name'] != $_SESSION['profile_name']) {?>
+                                <?php if (!$buttonLike) {?>
+                                    <a class="btn btn-success btn-xs" href="/files/like/<?=$file['name']?>"> Like <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> </a>
+                                <?php } else {?>
+                                    <a class="btn btn-default btn-xs" href="/files/dislike/<?=$file['name']?>"> Dislike <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> </a>
+                                <?php }?>
+                                <!--a class="btn btn-warning btn-xs" href=""> Create avatar <span class="glyphicon glyphicon-camera" aria-hidden="true"></span> </a-->
                             <?php } else {?>
-                                <a class="btn btn-default btn-xs" href="/files/dislike/<?=$file['name']?>"> Dislike <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> </a>
+                                <!--a class="btn btn-warning btn-xs" href=""> Create avatar <span class="glyphicon glyphicon-camera" aria-hidden="true"></span> </a-->
+                                <a class="btn btn-danger btn-xs" href="/files/delete/<?=$file['name']?>"> Delete <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> </a>
                             <?php }?>
-                            <a class="btn btn-warning btn-xs" href=""> Create avatar <span class="glyphicon glyphicon-camera" aria-hidden="true"></span> </a>
-                        <?php } else {?>
-                            <a class="btn btn-warning btn-xs" href=""> Create avatar <span class="glyphicon glyphicon-camera" aria-hidden="true"></span> </a>
-                            <a class="btn btn-danger btn-xs" href="/files/delete/<?=$file['name']?>"> Delete <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> </a>
-                        <?php }?>
+                        </form>
+
+
+
                     </div>
                 </div>
                 <div class="panel-body" >
                     <div class="thumbnail">
-                        <img src="<?= $file['folder'] . $file['name'] . $file['ext'];?>">
+                        <img class=" center-block" id="target" src="<?= $file['folder'] . $file['name'] . $file['ext'];?>">
                     </div>
 
                     <nav class="navbar navbar">
@@ -73,10 +91,72 @@
 
 <script>
     $(document).ready(function() {
+        // CROP ---------------------------------------------------
+        var jcrop_api;
+        var w = parseInt($('#target').css('width'))-2;
+
+        function initJcrop()//{{{
+        {
+            $('.requiresjcrop').hide();
+
+            $('#target').Jcrop({
+                minSize: [150, 150],
+                setSelect: [ 0, 0, 600, 600],
+                boxWidth: w,
+                boxHeight: w,
+                aspectRatio: 1,
+                trueSize: [600, 600],
+                bgColor:   '#fffffa',
+                bgOpacity: .4,
+                onRelease: releaseCheck,
+                onSelect: showCoords,
+                onChange: showCoords
+            },function(){
+
+                jcrop_api = this;
+                jcrop_api.animateTo([100,100,400,300]);
+
+                $('#can_click,#can_move,#can_size').attr('checked','checked');
+                $('#ar_lock,#size_lock,#bg_swap').attr('checked',false);
+                $('.requiresjcrop').show();
+            });
+        };
+
+        function showCoords(c) {
+            jQuery('#x').val(c.x);
+            jQuery('#y').val(c.y);
+            jQuery('#w').val(c.w);
+            jQuery('#h').val(c.h);
+        }
+
+        function releaseCheck()
+        {
+            jcrop_api.setOptions({ allowSelect: true });
+            $('#can_click').attr('checked',false);
+        };
+
+        $('#rehook').click(function(e) {
+            // This button is visible when Jcrop has been destroyed
+            // It performs the re-attachment and updates the UI
+            $('#rehook').hide();
+            initJcrop();
+            $('#unhook, #save').show();
+            return false;
+        });
+        $('#unhook').click(function(e) {
+            // Destroy Jcrop widget, restore original state
+            jcrop_api.destroy();
+            // Update the interface to reflect un-attached state
+            $('#unhook, #save').hide();
+            $('#rehook').show();
+            return false;
+        });
+
+        // COMMENT ---------------------------------------------------
         $("#text").on("keyup", function(event){
             if(event.keyCode == 13){
                 $.ajax({
-                    url: 'http://test-c.loc/files/comment',
+                    url: '/files/comment',
                     type: 'POST',
                     data: $("#comment-form").serialize(),
                     success: function (data, status) {

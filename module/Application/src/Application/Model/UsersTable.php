@@ -89,6 +89,7 @@ class UsersTable
         if (isset($dataIn['email']))           {$dataOut['email']           = $dataIn['email'];}
         if (isset($dataIn['password']))        {$dataOut['password']        = $dataIn['password'];}
         if (isset($dataIn['full_name']))       {$dataOut['full_name']       = $dataIn['full_name'];}
+        if (isset($dataIn['avatar_path']))  {$dataOut['avatar_path']    = $dataIn['avatar_path'];}
         if (isset($dataIn['bio']))             {$dataOut['bio']             = $dataIn['bio'];}
         if (isset($dataIn['link_vk']))         {$dataOut['link_vk']         = $dataIn['link_vk'];}
         if (isset($dataIn['link_fb']))         {$dataOut['link_fb']         = $dataIn['link_fb'];}

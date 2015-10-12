@@ -1,7 +1,11 @@
 <div class="jumbotron" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="col-md-2 col-md-offset-0">
-            <img src="/img/avatar.png" alt="..." class="img-circle avatar-edit center-block">
+            <?php if ($profile['avatar_path'] == '') {?>
+                <img src="/img/avatar.png" alt="..." class="img-circle avatar-edit center-block">
+            <?php } else {?>
+                <img src="<?=$profile['avatar_path']?>" alt="..." class="img-circle avatar-edit center-block">
+            <?php }?>
         </div>
 
         <div class="col-md-8 col-md-offset-0">
@@ -12,12 +16,12 @@
             </h1>
             <div class="btn-group" role="group" aria-label="...">
                 <div class="btn disabled">Photos <span class="badge"><?= $profile['count_photos']; ?></span></div>
-                <div class="btn disabled">Following <span class="badge"><?= $profile['count_following']; ?></span></div>
-                <div class="btn disabled">Followers <span class="badge"><?= $profile['count_followers']; ?></span></div>
+                <div class="btn disabled">Following <span class="badge"><?= count($following)?></span></div>
+                <div class="btn disabled">Followers <span class="badge"><?= count($followers)?></span></div>
             </div>
             <div>
                 <a class="btn btn-success" href="/<?= $profile['profile_name']; ?>">Flow <span class="glyphicon glyphicon-picture" aria-hidden="true"></span></a>
-                <a class="btn btn-success" href="/<?= $profile['profile_name']; ?>/about">About <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                <a class="btn btn-success disabled" href="/<?= $profile['profile_name']; ?>/about">About <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
                 <?php if ($buttonType == 1) { ?>
                     <a class="btn btn-success" href="/files/upload">Upload <span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
                 <?php } elseif ($buttonType == 2) { ?>
@@ -31,6 +35,9 @@
 </div>
 
 <div class="jumbotron" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+    <h2>Bio</h2>
+
 
     <p><?= $profile['bio']; ?></p>
 
@@ -53,9 +60,25 @@
     <?php if($profile['link_skype'] != '') : ?>
        <a class="btn btn-default" href="skype:<?= $profile['link_skype']; ?>">Skype <span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
     <?php endif ?>
+    <hr>
+        <h2>Following list</h2>
+        <?php foreach($following as $follow) :?>
+           <a class="btn btn-default" href="/<?= $follow['profile_name'] ?>">
+               <span class="glyphicon" aria-hidden="true">
+                   <img class="img-circle avatar-edit center-block" src="<?= $follow['avatar_path'] ?>" >
+               </span> <div>
+               <?= $follow['full_name'];?></div>
+           </a>
 
+        <?php endforeach?>
     <hr>
-        Following list (soon)
-    <hr>
-        Followers list (soon)
+        <h2>Followers list</h2>
+        <?php foreach($followers as $follow) :?>
+            <a class="btn btn-default" href="/<?= $follow['profile_name'] ?>">
+               <span class="glyphicon" aria-hidden="true">
+                   <img class="img-circle avatar-edit center-block" src="<?= $follow['avatar_path'] ?>" >
+               </span> <div>
+                    <?= $follow['full_name'];?></div>
+            </a>
+        <?php endforeach?>
 </div>
