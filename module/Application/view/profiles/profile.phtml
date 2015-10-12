@@ -20,7 +20,7 @@
                 <div class="btn disabled">Followers <span class="badge"><?= $profile['count_followers']; ?></span></div>
             </div>
             <div>
-                <a class="btn btn-success" href="/<?= $profile['profile_name']; ?>">Flow <span class="glyphicon glyphicon-picture" aria-hidden="true"></span></a>
+                <a class="btn btn-success disabled" href="/<?= $profile['profile_name']; ?>">Flow <span class="glyphicon glyphicon-picture" aria-hidden="true"></span></a>
                 <a class="btn btn-success" href="/<?= $profile['profile_name']; ?>/about">About <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
                 <?php if ($buttonType == 1) { ?>
                     <a class="btn btn-success" href="/files/upload">Upload <span class="glyphicon glyphicon-open" aria-hidden="true"></span></a>
@@ -38,14 +38,14 @@
     <?php foreach($files as $file) : ?>
         <div class="col-md-4">
             <div  class="thumbnail">
-            <a href="/files/view/<?= $file['name']; ?>">
-                <img src="<?=$file['folder']. $file['name']. $file['ext']; ?>">
-            </a>
-            <div class="btn-group" role="group" aria-label="...">
-                <div class="btn disabled"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $file['likes']; ?></div>
-                <div class="btn disabled"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <?= $file['comments']; ?></div>
-                <div class="btn disabled"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <span id="count-comments"><?= $file['views'];  ?></span></div>
-            </div>
+                <a href="/files/view/<?= $file['name']; ?>">
+                    <img src="<?=$file['folder']. $file['name']. $file['ext']; ?>">
+                </a>
+                <div class="btn-group" role="group" aria-label="...">
+                    <div class="btn disabled"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $file['likes']; ?></div>
+                    <div class="btn disabled"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <?= $file['comments']; ?></div>
+                    <div class="btn disabled"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <span id="count-comments"><?= $file['views'];  ?></span></div>
+                </div>
             </div>
         </div>
     <?php endforeach ?>

@@ -56,6 +56,38 @@ class FollowsTable
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    public function getFollowing($profileID)
+    {
+        $sql = new Sql($this->tableGateway->adapter);
+
+        $select = $sql->select()
+            ->from('follows')
+            ->where(array('id_follower' => $profileID))
+            ->join('users', 'users.id = follows.id_user');
+
+        $statement = $this->tableGateway->getSql()->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+
+        return $resultSet;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function getFollowers($profileID)
+    {
+        $sql = new Sql($this->tableGateway->adapter);
+
+        $select = $sql->select()
+            ->from('follows')
+            ->where(array('id_user' => $profileID))
+            ->join('users', 'users.id = follows.id_follower');
+
+        $statement = $this->tableGateway->getSql()->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+
+        return $resultSet;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
     public function delete($where = null)
     {
         return $this->tableGateway->delete($where);

@@ -90,10 +90,18 @@ class ProfilesController extends AbstractActionController
             }
         }
 
+        $following = $this->getFollowsTable()->getFollowing($profile['id']);
+        $followers = $this->getFollowsTable()->getFollowers($profile['id']);
+
+        //die($profile['id']);
+
         $view = new ViewModel(array(
             'profile' => $profile,
-            'buttonType' => $buttonType
+            'buttonType' => $buttonType,
+            'following' => $following,
+            'followers' => $followers,
         ));
+
         $view->setTemplate('profiles/about');
         return $view;
     }
