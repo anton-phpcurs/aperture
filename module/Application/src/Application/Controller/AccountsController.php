@@ -14,6 +14,7 @@ use Zend\View\Model\JsonModel;
 
 use Application\Form\RegistrationForm;
 use Application\Form\LoginForm;
+use Application\Form\ActiveForm;
 
 use Application\Form\EmailForm;
 use Application\Form\PasswordForm;
@@ -60,6 +61,20 @@ class AccountsController extends AbstractActionController
         };
 
         $profile = $this->getUsersTable()->getOneBy(array('id' => $_SESSION['id']));
+        if ($profile['activation'] != '') {
+
+            $formActive = new ActiveForm();
+            $formActive->setData($profile);
+
+            $view = new ViewModel(array(
+                    'formActive' => $formActive,
+                    'activation' => true
+                )
+            );
+            $view->setTemplate('accounts/edit');
+            return $view;
+        };
+
         $profile['email_current'] = $profile['email'];
         $profile['email'] = '';
 
@@ -76,6 +91,7 @@ class AccountsController extends AbstractActionController
                 'formEmail' => $formEmail,
                 'formPassword' => $formPassword,
                 'formOther' => $formOther,
+                'activation' => false
             )
         );
         $view->setTemplate('accounts/edit');
@@ -146,6 +162,52 @@ class AccountsController extends AbstractActionController
         $_SESSION['password']       = $profile['password'];
 
         $this->redirect()->toUrl('/accounts');
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function activationAction()
+    {
+        if (!$this->getRequest()->isPost()){
+            return $this->redirect()->toUrl('/accounts');
+        }
+
+        $post = $this->request->getPost();
+        var_dump($post);
+
+
+        if (isset($post['submit_email'])) {
+            $key = md5(microtime());
+            $this->sendMail($_SESSION['email'], $key);
+
+            $profile['id'] = $_SESSION['id'];
+            $profile['activation'] = $key;
+
+            $this->getUsersTable()->save($profile);
+            return $this->redirect()->toUrl('/accounts');
+        }
+
+        $profile = $this->getUsersTable()->getOneBy(array('activation' => $post['activation_key']));
+
+        if (!$profile) {
+            $formActive = new ActiveForm();
+
+            $view = new ViewModel(array(
+                    'formActive' => $formActive,
+                    'activation' => true,
+                    'message' => 'Key invalid',
+                    'error' => true
+                )
+            );
+            $view->setTemplate('accounts/edit');
+            return $view;
+        }
+
+        $post = [];
+        $post['id'] = $profile['id'];
+        $post['activation'] = '';
+
+        $this->getUsersTable()->save($post);
+        return $this->redirect()->toUrl('/accounts');
     }
 
     //------------------------------------------------------------------------------------------------------------------

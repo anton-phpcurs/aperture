@@ -40,6 +40,22 @@ class FilesTable
     }
 
     //------------------------------------------------------------------------------------------------------------------
+    public function getGalery($where = null)
+    {
+        $sql = new Sql($this->tableGateway->adapter);
+
+        $select = $sql->select();
+        $select->from('files');
+        $select->where($where);
+        $select->order('id DESC');
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+
+        return $results;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
     public function getNext($where = null)
     {
         $sql = new Sql($this->tableGateway->adapter);
@@ -87,6 +103,61 @@ class FilesTable
         $results = $statement->execute();
 
         return $results;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function getMyNews()
+    {
+
+        $sql = new Sql($this->tableGateway->adapter);
+
+        $select = $sql->select()
+            ->from('follows')
+
+            ->where(array('id_follower' => $_SESSION['id']))
+            ->join('files', 'files.id_user = follows.id_user')
+
+            ->order('files.id DESC')
+            ->limit(10);
+
+        $statement = $this->tableGateway->getSql()->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+
+        return $resultSet;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function getNextNews($fileID)
+    {
+        $sql = new Sql($this->tableGateway->adapter);
+
+        $select = $sql->select();
+        $select->from(array('f' => 'follows'))
+            ->join(array('fl' => 'files'), 'f.id_follower = fl.id_user');
+        $select->where->EqualTo('f.id_user', $_SESSION['id']);
+        $select->where->lessThan('fl.id', $fileID);
+        $select->order('fl.id DESC');
+        $select->limit(1);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        return $results->current();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function getPrevNews($fileID)
+    {
+        $sql = new Sql($this->tableGateway->adapter);
+
+        $select = $sql->select();
+        $select->from(array('f' => 'follows'))
+            ->join(array('fl' => 'files'), 'f.id_follower = fl.id_user');
+        $select->where->EqualTo('f.id_user', $_SESSION['id']);
+        $select->where->greaterThan('fl.id', $fileID);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        return $results->current();
     }
 
     //------------------------------------------------------------------------------------------------------------------

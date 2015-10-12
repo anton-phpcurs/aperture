@@ -45,15 +45,15 @@
                         <div class="nav ">
                             <div class="btn-group pull-right" role="group" aria-label="...">
                                 <?php if ($prev) {?>
-                                    <a class="btn" href="<?= '/files/view/'.$prev['name']; ?>"> <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Prev </a>
+                                    <a class="btn" href="<?= '/files/galery/'.$prev['name']; ?>"> <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Prev </a>
                                 <?php } else {?>
                                     <a class="btn disabled" href=""> <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Prev </a>
                                 <?php } ?>
 
-                                <a class="btn" href="<?= '/'.$_SESSION['profile_name']; ?> "> <span class="glyphicon glyphicon-th" aria-hidden="true"></span> All </a>
+                                <a class="btn" href="<?= '/'.$profile['profile_name']; ?> "> <span class="glyphicon glyphicon-th" aria-hidden="true"></span> All </a>
 
                                 <?php if ($next) {?>
-                                    <a class="btn" href="<?= '/files/view/'.$next['name']; ?>"> Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+                                    <a class="btn" href="<?= '/files/galery/'.$next['name']; ?>"> Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
                                 <?php } else {?>
                                     <a class="btn disabled" href=""> Next <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
                                 <?php } ?>

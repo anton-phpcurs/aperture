@@ -108,8 +108,102 @@ class FilesController extends AbstractActionController
         $file_name = $this->params()->fromRoute('id');
         $file = $this->getFilesTable()->getOneBy(array('name' => $file_name));
 
+        $filePrev = $this->getFilesTable()->getNext(array(new \Zend\Db\Sql\Predicate\Operator('id', '>', $file['id'])));
+        $fileNext = $this->getFilesTable()->getPrev(array(new \Zend\Db\Sql\Predicate\Operator('id', '<', $file['id'])));
+
+        $comments = $this->getCommentsTable()->getComments(array('file_name' => $file['name']));
+        $commentsCount = count($comments);
+        $likes = $file['likes'];
+
+        $cc['id'] = $file['id'];
+        $cc['comments'] = $commentsCount;
+        $cc['views'] = $file['views'] + 1;
+        $this->getFilesTable()->save($cc);
+
+        $buttonLike = false;
+        $post['file_name'] = $file_name;
+        $post['profile_name'] = $_SESSION['profile_name'];
+
+        if ($this->getLikesTable()->getOneBy($post)) {
+            $buttonLike = true;
+        }
+
+        $profile = $this->getUsersTable()->getOneBy(array('id' => $file['id_user']));
+
+        $model = new ViewModel(array(
+            'profile' => $profile,
+            'file' => $file,
+            'next' => $fileNext,
+            'prev' => $filePrev,
+            'comments' => $comments,
+            'viewsCount' => $file['views'] + 1,
+            'likesCount' => $likes,
+            'commentsCount' => $commentsCount,
+            'buttonLike' => $buttonLike,
+            'folder' => $file['folder'],
+            'name' => $file['name'],
+            'ext' => $file['ext'],
+
+        ));
+        $model->setTemplate('files/view');
+        return $model;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function galeryAction()
+    {
+        $file_name = $this->params()->fromRoute('id');
+        $file = $this->getFilesTable()->getOneBy(array('name' => $file_name));
+
         $filePrev = $this->getFilesTable()->getNext(array('id_user' => $file['id_user'], new \Zend\Db\Sql\Predicate\Operator('id', '>', $file['id'])));
         $fileNext = $this->getFilesTable()->getPrev(array('id_user' => $file['id_user'], new \Zend\Db\Sql\Predicate\Operator('id', '<', $file['id'])));
+
+        $comments = $this->getCommentsTable()->getComments(array('file_name' => $file['name']));
+        $commentsCount = count($comments);
+        $likes = $file['likes'];
+
+        $cc['id'] = $file['id'];
+        $cc['comments'] = $commentsCount;
+        $cc['views'] = $file['views'] + 1;
+        $this->getFilesTable()->save($cc);
+
+        $buttonLike = false;
+        $post['file_name'] = $file_name;
+        $post['profile_name'] = $_SESSION['profile_name'];
+
+        if ($this->getLikesTable()->getOneBy($post)) {
+            $buttonLike = true;
+        }
+
+        $profile = $this->getUsersTable()->getOneBy(array('id' => $file['id_user']));
+
+        $model = new ViewModel(array(
+            'profile' => $profile,
+            'file' => $file,
+            'next' => $fileNext,
+            'prev' => $filePrev,
+            'comments' => $comments,
+            'viewsCount' => $file['views'] + 1,
+            'likesCount' => $likes,
+            'commentsCount' => $commentsCount,
+            'buttonLike' => $buttonLike,
+            'folder' => $file['folder'],
+            'name' => $file['name'],
+            'ext' => $file['ext'],
+
+        ));
+        $model->setTemplate('files/view');
+        return $model;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    public function newsAction()
+    {
+        $file_name = $this->params()->fromRoute('id');
+        $file = $this->getFilesTable()->getOneBy(array('name' => $file_name));
+
+        $fileNext = $this->getFilesTable()->getNextNews($file['id']);
+        $filePrev = $this->getFilesTable()->getPrevNews($file['id']);
 
         $comments = $this->getCommentsTable()->getComments(array('file_name' => $file['name']));
         $commentsCount = count($comments);

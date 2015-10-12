@@ -1,0 +1,24 @@
+<div class="row">
+
+
+<?php
+    foreach($files as $file) :
+?>
+        <div class="col-md-6">
+
+<div id="<?=$file['id']; ?>" class="thumbnail galery-image">
+    <a href="/files/news/<?= $file['name']; ?>">
+        <img src="<?=$file['folder']. $file['name']. $file['ext']; ?>">
+    </a>
+    <div class="btn-group" role="group" aria-label="...">
+        <div class="btn disabled"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <?= $file['likes']; ?></div>
+        <div class="btn disabled"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <?= $file['comments']; ?></div>
+        <div class="btn disabled"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <span id="count-comments"><?= $file['views'];  ?></span></div>
+    </div>
+</div>
+
+        </div>
+<?php endforeach; ?>
+
+
+</div>

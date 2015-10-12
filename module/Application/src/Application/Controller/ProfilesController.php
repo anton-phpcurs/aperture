@@ -36,7 +36,25 @@ class ProfilesController extends AbstractActionController
             return false;
         }
 
-        $files = $this->getFilesTable()->getManyBy(array('id_user' => $profile['id']));
+        if ($profile['is_active'] == 0) {
+            if ($profile['activation'] != '') {
+                $this->redirect()->toUrl('/accounts/activation');
+            };
+
+            $following = $this->getFollowsTable()->getFollowing($profile['id']);
+            $followers = $this->getFollowsTable()->getFollowers($profile['id']);
+
+            $view = new ViewModel(array(
+                'profile' => $profile,
+                'following' => $following,
+                'followers' => $followers
+            ));
+            $view->setTemplate('profiles/profile');
+            return $view;
+        }
+
+        //$files = $this->getFilesTable()->getManyBy(array('id_user' => $profile['id']));
+        $files = $this->getFilesTable()->getGalery(array('id_user' => $profile['id']));
 
         if ($_SESSION['profile_name'] == $profile_name) {
             $buttonType = 1;
@@ -61,8 +79,22 @@ class ProfilesController extends AbstractActionController
             'buttonType' => $buttonType,
             'following' => $following,
             'followers' => $followers
-        ));
+         ));
         $view->setTemplate('profiles/profile');
+        return $view;
+    }
+
+
+    public function newsAction()
+    {
+        if (!isset($_SESSION['profile_name'])) {
+            return new ViewModel();
+        };
+
+        $files = $this->getFilesTable()->getMyNews();
+
+        $view = new ViewModel(array('files' => $files));
+        $view->setTemplate('profiles/news');
         return $view;
     }
 

@@ -115,6 +115,19 @@ class OtherForm extends Form
             'for' => 'flink-tw'
         ));
 
+        //-- Password --
+        $check = new Element\Checkbox('is_active');
+        $check->setAttribute('class', 'form-control');
+        $check->setAttribute('id', 'is-active');
+        $check->setCheckedValue("1");
+        $check->setUncheckedValue("0");
+
+        $check->setLabel('Is active');
+        $check->setLabelAttributes(array(
+            'class' => 'control-label',
+            'for' => 'is-active'
+        ));
+
         //-- Submit --
         $submit = new Element\Submit('submit');
         $submit->setAttribute('class', 'btn btn-success');
@@ -128,6 +141,7 @@ class OtherForm extends Form
         $this->add($link_vk);
         $this->add($link_fb);
         $this->add($link_tw);
+        $this->add($check);
     }
 
     //------------------------------------------------------------------------------------------------------------------

@@ -58,6 +58,7 @@
                     <li><a href="/accounts/registration"><?php echo $this->translate('Registration') ?> <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span></a></li>
                     <li><a href="/accounts/login"><?php echo $this->translate('Login') ?> <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span></a></li>
                 <?php } else { ?>
+                    <li ><a href="/<?= $_SESSION['profile_name']?>/news">News <span class="glyphicon glyphicon-globe" aria-hidden="true"></span></a></li>
                     <li ><a href="/<?= $_SESSION['profile_name']?>"><?= $_SESSION['profile_name']?> <span class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
                     <li ><a href="/accounts/edit">Settings <span class="glyphicon glyphicon glyphicon-cog" aria-hidden="true"></span></a></li>
                     <li ><a href="/accounts/logout"><?php echo $this->translate('Quit') ?> <span class="glyphicon glyphicon-log-out" aria-hidden="true"></a></li>

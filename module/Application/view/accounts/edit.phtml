@@ -1,5 +1,40 @@
 <section>
     <div class="row">
+        <?php if ($activation) {?>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Active</h3>
+                </div>
+                <div class="panel-body">
+                    <?php if ($this->error): ?>
+                        <p class="error"> <?= $message; ?> </p>
+                    <?php endif ?>
+                    <?php
+                    $formActive = $this->formActive;
+                    echo $this->form()->openTag($formActive);
+                    ?>
+                    <div class="control-group">
+                        <?=$this->formLabel($formActive->get('activation_key')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formActive->get('activation_key'));?>
+                            <?= $this->formElementErrors($formActive->get('activation_key')); ?>
+                        </div>
+                    </div>
+
+                    <div class="control-label pull-left">
+                        <?= $this->formElement($formActive->get('submit'));?>
+                    </div>
+                    <div class="control-label pull-right">
+                        <?= $this->formElement($formActive->get('submit_email'));?>
+                    </div>
+                    <?php echo $this->form()->closeTag() ?>
+                </div>
+            </div>
+        </div>
+
+        <?php } else { ?>
+
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -137,7 +172,13 @@
                             <?= $this->formElementErrors($formOther->get('link_tw')); ?>
                         </div>
                     </div>
-
+                    <div class="control-group">
+                        <?=$this->formLabel($formOther->get('is_active')); ?>
+                        <div class="controls">
+                            <?= $this->formElement($formOther->get('is_active'));?>
+                            <?= $this->formElementErrors($formOther->get('is_active')); ?>
+                        </div>
+                    </div>
                     <div class="control-label pull-left">
                         <?= $this->formElement($formPassword->get('submit'));?>
                     </div>
@@ -145,5 +186,6 @@
                 </div>
             </div>
         </div>
+        <?php }?>
     </div>
 </section>
